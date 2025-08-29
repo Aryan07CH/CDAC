@@ -1,0 +1,61 @@
+CREATE TABLE User (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Product (
+    product_id INT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL
+);
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    user_id INT,
+    order_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE OrderItem (
+    order_item_id INT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);
+
+INSERT INTO User (user_id, name, email, password) VALUES
+(1, 'Alice Johnson', 'alice@example.com', 'password123'),
+(2, 'Bob Smith', 'bob@example.com', 'password456'),
+(3, 'Carol White', 'carol@example.com', 'password789'),
+(4, 'David Lee', 'david@example.com', 'passwordabc'),
+(5, 'Eva Green', 'eva@example.com', 'passwordxyz');
+
+INSERT INTO Product (product_id, name, price, stock_quantity) VALUES
+(1, 'Wireless Mouse', 25.99, 100),
+(2, 'Bluetooth Keyboard', 45.50, 80),
+(3, 'USB-C Charger', 19.99, 150),
+(4, '27-inch Monitor', 229.00, 40),
+(5, 'Noise Cancelling Headphones', 99.95, 60);
+
+INSERT INTO Orders (order_id, user_id, order_date, total_amount) VALUES
+(1, 1, '2025-08-01', 71.48),
+(2, 2, '2025-08-03', 229.00),
+(3, 3, '2025-08-05', 45.50),
+(4, 4, '2025-08-06', 145.94),
+(5, 5, '2025-08-07', 99.95);
+
+INSERT INTO OrderItem (order_item_id, order_id, product_id, quantity, price) VALUES
+(1, 1, 1, 1, 25.99), 
+(2, 1, 2, 1, 45.49), 
+(3, 2, 4, 1, 229.00),
+(4, 3, 2, 1, 45.50),  
+(5, 4, 1, 2, 51.98), 
+(6, 4, 3, 2, 39.96), 
+(7, 5, 5, 1, 99.95);  
