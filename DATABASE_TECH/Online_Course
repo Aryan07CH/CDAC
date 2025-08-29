@@ -1,0 +1,121 @@
+mysql> create database online_course;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(50) not null,email varchar(100) unique, is_active boolean default true);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc studinfo;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| stud_id   | int          | NO   | PRI | NULL    | auto_increment |
+| stud_name | varchar(50)  | NO   |     | NULL    |                |
+| email     | varchar(100) | YES  | UNI | NULL    |                |
+| is_active | tinyint(1)   | YES  |     | 1       |                |
++-----------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> create table studinfo(cour_id int primary key auto_increment,cour_name varchar(50) not null,duration_Mth int not null);
+ERROR 1050 (42S01): Table 'studinfo' already exists
+mysql> create table courinfo(cour_id int primary key auto_increment,cour_name varchar(50) not null,duration_Mth int not null);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc courinfo;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| cour_id      | int         | NO   | PRI | NULL    | auto_increment |
+| cour_name    | varchar(50) | NO   |     | NULL    |                |
+| duration_Mth | int         | NO   |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql>
+mysql> create table enrollinfo(enroll_id int primary key auto_increment,stud_id int,foreign key stud_id references studinfo(stud_id),cour_id int,foreign keycour_id references courinfo(cour_id), is_completed boolean default false);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'references studinfo(stud_id),cour_id int,foreign keycour_id references courinfo(' at line 1
+mysql> create table enrollinfo(enroll_id int primary key auto_increment,stud_id int,foreign key stud_id references studinfo(stud_id),cour_id int,foreign keycour_id references courinfo(cour_id), is_completed boolean default false^C
+mysql> create table enrollinfo(enroll_id int primary key auto_increment,stud_id ,cour_id intint,is_completed boolean default false,foreign key stud_id references studinfo(stud_id),foreign keycour_id references courinfo(cour_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',cour_id intint,is_completed boolean default false,foreign key stud_id reference' at line 1
+mysql> CREATE TABLE enrollinfo (
+    ->     enroll_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     stud_id INT,
+    ->     cour_id INT,
+    ->     is_completed BOOLEAN DEFAULT FALSE,
+    ->     FOREIGN KEY (stud_id) REFERENCES studinfo(stud_id),
+    ->     FOREIGN KEY (cour_id) REFERENCES courinfo(cour_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc enrollinfo;
++--------------+------------+------+-----+---------+----------------+
+| Field        | Type       | Null | Key | Default | Extra          |
++--------------+------------+------+-----+---------+----------------+
+| enroll_id    | int        | NO   | PRI | NULL    | auto_increment |
+| stud_id      | int        | YES  | MUL | NULL    |                |
+| cour_id      | int        | YES  | MUL | NULL    |                |
+| is_completed | tinyint(1) | YES  |     | 0       |                |
++--------------+------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO studinfo (stud_name, email) VALUES
+    -> ('Alice Johnson', 'alice.j@email.com'),
+    -> ('Bob Williams', 'bob.w@email.com'),
+    -> ('Charlie Brown', 'charlie.b@email.com'),
+    -> ('Diana Prince', 'diana.p@email.com'),
+    -> ('Ethan Hunt', 'ethan.h@email.com');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> select * from studinfo;
++---------+---------------+---------------------+-----------+
+| stud_id | stud_name     | email               | is_active |
++---------+---------------+---------------------+-----------+
+|       1 | Alice Johnson | alice.j@email.com   |         1 |
+|       2 | Bob Williams  | bob.w@email.com     |         1 |
+|       3 | Charlie Brown | charlie.b@email.com |         1 |
+|       4 | Diana Prince  | diana.p@email.com   |         1 |
+|       5 | Ethan Hunt    | ethan.h@email.com   |         1 |
++---------+---------------+---------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO courinfo (cour_name, duration_Mth) VALUES
+    -> ('Database Fundamentals', 3),
+    -> ('Introduction to Python', 6),
+    -> ('Web Development Basics', 4),
+    -> ('Data Structures and Algorithms', 5),
+    -> ('Machine Learning Concepts', 8);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>  INSERT INTO enrollinfo (stud_id, cour_id, is_completed) VALUES
+    -> (1, 1, TRUE),
+    -> (2, 2, FALSE),
+    -> (3, 3, FALSE),
+    -> (4, 1, TRUE),
+    -> (5, 4, FALSE);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from courinfo;
++---------+--------------------------------+--------------+
+| cour_id | cour_name                      | duration_Mth |
++---------+--------------------------------+--------------+
+|       1 | Database Fundamentals          |            3 |
+|       2 | Introduction to Python         |            6 |
+|       3 | Web Development Basics         |            4 |
+|       4 | Data Structures and Algorithms |            5 |
+|       5 | Machine Learning Concepts      |            8 |
++---------+--------------------------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from enrollinfo;
++-----------+---------+---------+--------------+
+| enroll_id | stud_id | cour_id | is_completed |
++-----------+---------+---------+--------------+
+|         1 |       1 |       1 |            1 |
+|         2 |       2 |       2 |            0 |
+|         3 |       3 |       3 |            0 |
+|         4 |       4 |       1 |            1 |
+|         5 |       5 |       4 |            0 |
++-----------+---------+-----
