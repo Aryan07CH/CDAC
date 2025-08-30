@@ -1,0 +1,387 @@
+mysql> create database studentdb;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use studentdb;
+Database changed
+mysql>
+mysql> use studentdb;
+Database changed
+mysql> create table instinfo(inst_id int primary key auto_increment,inst_name varchar(20) not null,City varchar(10) not null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> create table instinfo(inst_id int primary key auto_increment,inst_name varchar(20) not null,City varchar(10) not null);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(20), age int,inst_id int, foreign key (inst_id) references instinfo(inst_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id) VALUES
+    -> ('Alice', 21, 1),
+    -> ('Bob', 22, 2),
+    -> ('Carol', 23, 3),
+    -> ('David', 20, 4),
+    -> ('Emma', 19, 5),
+    -> ('Frank', 24, 6),
+    -> ('Grace', 22, 7);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`studentdb`.`studinfo`, CONSTRAINT `studinfo_ibfk_1` FOREIGN KEY (`inst_id`) REFERENCES `instinfo` (`inst_id`))
+mysql> INSERT INTO instinfo (inst_name, City) VALUES
+    -> ('Institute A', 'Mumbai'),
+    -> ('Institute B', 'Chennai'),
+    -> ('Institute C', 'Pune'),
+    -> ('Institute D', 'Delhi'),
+    -> ('Institute E', 'Bangalore'),
+    -> ('Institute F', 'Hyderabad'),
+    -> ('Institute G', 'Kolkata');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id) VALUES
+    -> ('Alice', 21, 1),
+    -> ('Bob', 22, 2),
+    -> ('Carol', 23, 3),
+    -> ('David', 20, 4),
+    -> ('Emma', 19, 5),
+    -> ('Frank', 24, 6),
+    -> ('Grace', 22, 7);
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> drop table studinfo;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(20), age int,course varchar(20) not null,inst_id int, foreign key (inst_id) references instinfo(inst_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id, course) VALUES
+    -> ('Alice', 21, 1, 'Computer Science'),
+    -> ('Bob', 22, 2, 'Mechanical Engineering'),
+    -> ('Carol', 23, 3, 'Electrical Engineering'),
+    -> ('David', 20, 4, 'Civil Engineering'),
+    -> ('Emma', 19, 5, 'Biotechnology'),
+    -> ('Frank', 24, 6, 'Business Administration'),
+    -> ('Grace', 22, 7, 'Chemical Engineering');
+ERROR 1406 (22001): Data too long for column 'course' at row 2
+mysql> drop table studinfo;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(20), age int,inst_id int,course varchar(20) not null, foreign key (inst_id) references instinfo(inst_id));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id, course) VALUES
+    -> ('Alice', 21, 1, 'Computer Science'),
+    -> ('Bob', 22, 2, 'Mechanical Engineering'),
+    -> ('Carol', 23, 3, 'Electrical Engineering'),
+    -> ('David', 20, 4, 'Civil Engineering'),
+    -> ('Emma', 19, 5, 'Biotechnology'),
+    -> ('Frank', 24, 6, 'Business Administration'),
+    -> ('Grace', 22, 7, 'Chemical Engineering');
+ERROR 1406 (22001): Data too long for column 'course' at row 2
+mysql> drop table studinfo;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(20), age int,course varchar(50) not null,inst_id int, foreign key (inst_id) references instinfo(inst_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id, course) VALUES
+    -> ('Alice', 21, 1, 'Computer Science'),
+    -> ('Bob', 22, 2, 'Mechanical Engineering'),
+    -> ('Carol', 23, 3, 'Electrical Engineering'),
+    -> ('David', 20, 4, 'Civil Engineering'),
+    -> ('Emma', 19, 5, 'Biotechnology'),
+    -> ('Frank', 24, 6, 'Business Administration'),
+    -> ('Grace', 22, 7, 'Chemical Engineering');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from instinfo;
++---------+-------------+-----------+
+| inst_id | inst_name   | City      |
++---------+-------------+-----------+
+|       1 | Institute A | Mumbai    |
+|       2 | Institute B | Chennai   |
+|       3 | Institute C | Pune      |
+|       4 | Institute D | Delhi     |
+|       5 | Institute E | Bangalore |
+|       6 | Institute F | Hyderabad |
+|       7 | Institute G | Kolkata   |
++---------+-------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select * from studinfo;
++---------+-----------+------+-------------------------+---------+
+| stud_id | stud_name | age  | course                  | inst_id |
++---------+-----------+------+-------------------------+---------+
+|       1 | Alice     |   21 | Computer Science        |       1 |
+|       2 | Bob       |   22 | Mechanical Engineering  |       2 |
+|       3 | Carol     |   23 | Electrical Engineering  |       3 |
+|       4 | David     |   20 | Civil Engineering       |       4 |
+|       5 | Emma      |   19 | Biotechnology           |       5 |
+|       6 | Frank     |   24 | Business Administration |       6 |
+|       7 | Grace     |   22 | Chemical Engineering    |       7 |
++---------+-----------+------+-------------------------+---------+
+7 rows in set (0.00 sec)
+
+mysql> drop table studinfo;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table studinfo(stud_id int primary key auto_increment,stud_name varchar(20), age int,course varchar(50) not null,inst_id int, foreign key (inst_id) references instinfo(inst_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO studinfo (stud_name, age, inst_id, course) VALUES
+    -> ('Alice', 21, 1, 'Computer Science'),
+    -> ('Bob', 22, 2, 'Mechanical Engineering'),
+    -> ('Carol', 23, 3, 'Electrical Engineering'),
+    -> ('David', 20, null, 'Civil Engineering'),
+    -> ('Emma', 19, 5, 'Biotechnology'),
+    -> ('Frank', 24, null, 'Business Administration'),
+    -> ('Grace', 22, 7, 'Chemical Engineering');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from studinfo;
++---------+-----------+------+-------------------------+---------+
+| stud_id | stud_name | age  | course                  | inst_id |
++---------+-----------+------+-------------------------+---------+
+|       1 | Alice     |   21 | Computer Science        |       1 |
+|       2 | Bob       |   22 | Mechanical Engineering  |       2 |
+|       3 | Carol     |   23 | Electrical Engineering  |       3 |
+|       4 | David     |   20 | Civil Engineering       |    NULL |
+|       5 | Emma      |   19 | Biotechnology           |       5 |
+|       6 | Frank     |   24 | Business Administration |    NULL |
+|       7 | Grace     |   22 | Chemical Engineering    |       7 |
++---------+-----------+------+-------------------------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select s.stud_id,s.stud_name,s.course,s.age from studinfo s inner join instinfo i
+    -> where s.inst_id=i.inst_id;
++---------+-----------+------------------------+------+
+| stud_id | stud_name | course                 | age  |
++---------+-----------+------------------------+------+
+|       1 | Alice     | Computer Science       |   21 |
+|       2 | Bob       | Mechanical Engineering |   22 |
+|       3 | Carol     | Electrical Engineering |   23 |
+|       5 | Emma      | Biotechnology          |   19 |
+|       7 | Grace     | Chemical Engineering   |   22 |
++---------+-----------+------------------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select s.stud_id,s.stud_name,s.course,i.inst_name from studinfo s inner join instinfo i where s.stud_ID=i.inst_id;
++---------+-----------+-------------------------+-------------+
+| stud_id | stud_name | course                  | inst_name   |
++---------+-----------+-------------------------+-------------+
+|       1 | Alice     | Computer Science        | Institute A |
+|       2 | Bob       | Mechanical Engineering  | Institute B |
+|       3 | Carol     | Electrical Engineering  | Institute C |
+|       4 | David     | Civil Engineering       | Institute D |
+|       5 | Emma      | Biotechnology           | Institute E |
+|       6 | Frank     | Business Administration | Institute F |
+|       7 | Grace     | Chemical Engineering    | Institute G |
++---------+-----------+-------------------------+-------------+
+7 rows in set (0.00 sec)
+
+mysql> drop table instinfo;
+ERROR 3730 (HY000): Cannot drop table 'instinfo' referenced by a foreign key constraint 'studinfo_ibfk_1' on table 'studinfo'.
+mysql> update instinfo set inst_name = 'IIT Bombay where city='Mumbai';
+    '> update instinfo set inst_name = 'IIT Bombay' where city='Mumbai';
+    '> ^C
+mysql> update instinfo set inst_name = 'IIT Bombay' where city='Mumbai';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'IIT Madras' where city= 'Chennai';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'IIIT Pune' where city='Pune';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'Delhi University' where city='Delhi';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'IISc Bangalore' where city='Bangalore';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'University of Hyderabad' where city='Hyderabad';
+ERROR 1406 (22001): Data too long for column 'inst_name' at row 6
+mysql> update instinfo set inst_name = 'UN Hyderabad' where city='Hyderabad';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update instinfo set inst_name = 'Jadavpur University' 'Kolkata';
+ERROR 1406 (22001): Data too long for column 'inst_name' at row 1
+mysql> update instinfo set inst_name = 'Jadavpur University' where city= 'Kolkata';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>  select s.stud_id,s.stud_name,s.course,i.inst_name from studinfo s inner join instinfo i where s.stud_ID=i.inst_id;
++---------+-----------+-------------------------+---------------------+
+| stud_id | stud_name | course                  | inst_name           |
++---------+-----------+-------------------------+---------------------+
+|       1 | Alice     | Computer Science        | IIT Bombay          |
+|       2 | Bob       | Mechanical Engineering  | IIT Madras          |
+|       3 | Carol     | Electrical Engineering  | IIIT Pune           |
+|       4 | David     | Civil Engineering       | Delhi University    |
+|       5 | Emma      | Biotechnology           | IISc Bangalore      |
+|       6 | Frank     | Business Administration | UN Hyderabad        |
+|       7 | Grace     | Chemical Engineering    | Jadavpur University |
++---------+-----------+-------------------------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,isnull(i.inst_name,Not Assign) from studinfo s inner join instinfo i where s.stud_ID=i.inst_id;
+ERROR 1582 (42000): Incorrect parameter count in the call to native function 'isnull'
+mysql>  select s.stud_name,isnull(i.inst_name,'Not Assigned') as Inst_name from studinfo s left join instinfo i on s.stud_ID=i.inst_id;
+ERROR 1582 (42000): Incorrect parameter count in the call to native function 'isnull'
+mysql>  select s.stud_name,ifnull(i.inst_name,'Not Assigned') as Inst_name from studinfo s left join instinfo i on s.stud_ID=i.inst_id;
++-----------+---------------------+
+| stud_name | Inst_name           |
++-----------+---------------------+
+| Alice     | IIT Bombay          |
+| Bob       | IIT Madras          |
+| Carol     | IIIT Pune           |
+| David     | Delhi University    |
+| Emma      | IISc Bangalore      |
+| Frank     | UN Hyderabad        |
+| Grace     | Jadavpur University |
++-----------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,ifnull(i.inst_name,'Not Assigned') as Inst_name from studinfo s left join instinfo i on s.inst_ID=i.inst_id;
++-----------+---------------------+
+| stud_name | Inst_name           |
++-----------+---------------------+
+| Alice     | IIT Bombay          |
+| Bob       | IIT Madras          |
+| Carol     | IIIT Pune           |
+| David     | Not Assigned        |
+| Emma      | IISc Bangalore      |
+| Frank     | Not Assigned        |
+| Grace     | Jadavpur University |
++-----------+---------------------+
+7 rows in set (0.00 sec)
+
+mysql>  select i.inst_name,,ifnull(s.stud_name,'Not Assigned') as Stud_name from studinfo s left join instinfo i on s.inst_ID=i.inst_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',ifnull(s.stud_name,'Not Assigned') as Stud_name from studinfo s left join insti' at line 1
+mysql>  select i.inst_name,,ifnull(s.stud_name,'Not Assigned') as Stud_name from studinfo s right join instinfo i on s.inst_ID=i.inst_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',ifnull(s.stud_name,'Not Assigned') as Stud_name from studinfo s right join inst' at line 1
+mysql>  select i.inst_name,ifnull(s.stud_name,'Not Assigned') as Stud_name from studinfo s right join instinfo i on s.inst_ID=i.inst_id;
++---------------------+--------------+
+| inst_name           | Stud_name    |
++---------------------+--------------+
+| IIT Bombay          | Alice        |
+| IIT Madras          | Bob          |
+| IIIT Pune           | Carol        |
+| Delhi University    | Not Assigned |
+| IISc Bangalore      | Emma         |
+| UN Hyderabad        | Not Assigned |
+| Jadavpur University | Grace        |
++---------------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql>  select i.inst_name,ifnull(s.stud_name,'Not Student') as Stud_name from studinfo s left join instinfo i on s.inst_ID=i.inst_id;
++---------------------+-----------+
+| inst_name           | Stud_name |
++---------------------+-----------+
+| IIT Bombay          | Alice     |
+| IIT Madras          | Bob       |
+| IIIT Pune           | Carol     |
+| NULL                | David     |
+| IISc Bangalore      | Emma      |
+| NULL                | Frank     |
+| Jadavpur University | Grace     |
++---------------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql>  select i.inst_name,ifnull(s.stud_name,'Not Student') as Stud_name from studinfo s right join instinfo i on s.inst_ID=i.inst_id;
++---------------------+-------------+
+| inst_name           | Stud_name   |
++---------------------+-------------+
+| IIT Bombay          | Alice       |
+| IIT Madras          | Bob         |
+| IIIT Pune           | Carol       |
+| Delhi University    | Not Student |
+| IISc Bangalore      | Emma        |
+| UN Hyderabad        | Not Student |
+| Jadavpur University | Grace       |
++---------------------+-------------+
+7 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,i.inst_name from studinfo s left join instinfo i on s.inst_ID=i.inst_id
+    -> union
+    ->  select i.inst_name,s.stud_name from studinfo s right join instinfo i on s.inst_ID=i.inst_id;
++---------------------+---------------------+
+| stud_name           | inst_name           |
++---------------------+---------------------+
+| Alice               | IIT Bombay          |
+| Bob                 | IIT Madras          |
+| Carol               | IIIT Pune           |
+| David               | NULL                |
+| Emma                | IISc Bangalore      |
+| Frank               | NULL                |
+| Grace               | Jadavpur University |
+| IIT Bombay          | Alice               |
+| IIT Madras          | Bob                 |
+| IIIT Pune           | Carol               |
+| Delhi University    | NULL                |
+| IISc Bangalore      | Emma                |
+| UN Hyderabad        | NULL                |
+| Jadavpur University | Grace               |
++---------------------+---------------------+
+14 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,i.inst_name from studinfo s left join instinfo i on s.inst_ID=i.inst_id
+    -> union
+    ->  select s.stud_name,i.inst_name from studinfo s right join instinfo i on s.inst_ID=i.inst_id;
++-----------+---------------------+
+| stud_name | inst_name           |
++-----------+---------------------+
+| Alice     | IIT Bombay          |
+| Bob       | IIT Madras          |
+| Carol     | IIIT Pune           |
+| David     | NULL                |
+| Emma      | IISc Bangalore      |
+| Frank     | NULL                |
+| Grace     | Jadavpur University |
+| NULL      | Delhi University    |
+| NULL      | UN Hyderabad        |
++-----------+---------------------+
+9 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,s.course,i.inst_name from studinfo s inner join instinfo i where i.city='Mumbai';
++-----------+-------------------------+------------+
+| stud_name | course                  | inst_name  |
++-----------+-------------------------+------------+
+| Alice     | Computer Science        | IIT Bombay |
+| Bob       | Mechanical Engineering  | IIT Bombay |
+| Carol     | Electrical Engineering  | IIT Bombay |
+| David     | Civil Engineering       | IIT Bombay |
+| Emma      | Biotechnology           | IIT Bombay |
+| Frank     | Business Administration | IIT Bombay |
+| Grace     | Chemical Engineering    | IIT Bombay |
++-----------+-------------------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from instinfo;
++---------+---------------------+-----------+
+| inst_id | inst_name           | City      |
++---------+---------------------+-----------+
+|       1 | IIT Bombay          | Mumbai    |
+|       2 | IIT Madras          | Chennai   |
+|       3 | IIIT Pune           | Pune      |
+|       4 | Delhi University    | Delhi     |
+|       5 | IISc Bangalore      | Bangalore |
+|       6 | UN Hyderabad        | Hyderabad |
+|       7 | Jadavpur University | Kolkata   |
++---------+---------------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql>  select s.stud_name,s.course,i.inst_name from studinfo s inner join instinfo i on i.inst_id=s.inst_id where i.city='Mumbai';
++-----------+------------------+------------+
+| stud_name | course           | inst_name  |
++-----------+------------------+------------+
+| Alice     | Computer Science | IIT Bombay |
++-----------+------------------+------------+
+1 row in set (0.00 sec)
+
+mysql>
