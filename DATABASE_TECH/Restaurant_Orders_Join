@@ -1,0 +1,255 @@
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| account            |
+| booking            |
+| bookingdb          |
+| bookmyshow         |
+| cdac               |
+| cdacks             |
+| client             |
+| customer           |
+| e_com_web          |
+| ecommerce          |
+| empll              |
+| employee           |
+| hibernate          |
+| information_schema |
+| jdbc               |
+| library            |
+| logindetails       |
+| marriageb          |
+| mycompany          |
+| mysql              |
+| online_course      |
+| performance_schema |
+| sakila             |
+| school             |
+| services           |
+| student            |
+| studentdb          |
+| travelease         |
+| wbtprojectdb       |
++--------------------+
+29 rows in set (0.04 sec)
+
+mysql> use studentdb;
+Database changed
+mysql> create database MyResto;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use myresto;
+Database changed
+mysql> create table restinfo(rest_id int primary key,rest_name varchar(20) not null,location varchar(20) enum('Mumbai','Dadar','Colaba','Panvel','Vashi','Thane'));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'enum('Mumbai','Dadar','Colaba','Panvel','Vashi','Thane'))' at line 1
+mysql> create table restinfo(rest_id int primary key,rest_name varchar(20) not null,location enum('Mumbai','Dadar','Colaba','Panvel','Vashi','Thane'));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO restinfo (rest_id, rest_name, location) VALUES
+    -> (1, 'Spice Hub', 'Mumbai'),
+    -> (2, 'Seafood Delight', 'Colaba'),
+    -> (3, 'The Dadar Diner', 'Dadar'),
+    -> (4, 'Panvel Palace', 'Panvel'),
+    -> (5, 'Vashi Vibes', 'Vashi'),
+    -> (6, 'Thane Treats', 'Thane'),
+    -> (7, 'Mumbai Magic', 'Mumbai'),
+    -> (8, 'Colaba Café', 'Colaba');
+Query OK, 8 rows affected (0.05 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> create table orders(o_id int primary key,rest_id int,cust_name varchar(20),o_amt decimal(8,2),o_date DATE,foreign key (rest_id) references restinfo(rest_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO orders (o_id, rest_id, cust_name, o_amt, o_date) VALUES
+    -> (1, 1, 'Alice', 250.75, '2025-08-01'),
+    -> (2, 3, 'Bob', 180.00, '2025-08-02'),
+    -> (3, 2, 'Charlie', 320.50, '2025-08-03'),
+    -> (4, 5, 'Diana', 150.25, '2025-08-04'),
+    -> (5, 4, 'Ethan', 290.00, '2025-08-05'),
+    -> (6, 6, 'Fiona', 220.00, '2025-08-06'),
+    -> (7, 7, 'George', 310.80, '2025-08-07'),
+    -> (8, 8, 'Hannah', 275.40, '2025-08-08');
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE orders CHANGE cust_name order_name VARCHAR(20);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc orders
+    -> ;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| o_id       | int          | NO   | PRI | NULL    |       |
+| rest_id    | int          | YES  | MUL | NULL    |       |
+| order_name | varchar(20)  | YES  |     | NULL    |       |
+| o_amt      | decimal(8,2) | YES  |     | NULL    |       |
+| o_date     | date         | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+5 rows in set (0.03 sec)
+
+mysql> drop table orders;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table orders(o_id int primary key,rest_id int,cust_name varchar(20),o_amt decimal(8,2),o_date DATE,foreign key (rest_id) references restinfo(rest_id));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO orders (o_id, rest_id, cust_name, o_amt, o_date) VALUES
+    -> (1, 1, 'Alice', 250.75, '2025-08-01'),
+    -> (2, 3, 'Bob', 180.00, '2025-08-02'),
+    -> (3, 2, 'Charlie', 320.50, '2025-08-03'),
+    -> (4, 5, 'Diana', 150.25, '2025-08-04'),
+    -> (5, 4, 'Ethan', 290.00, '2025-08-05'),
+    -> (6, 6, 'Fiona', 220.00, '2025-08-06'),
+    -> (7, 7, 'George', 310.80, '2025-08-07'),
+    -> (8, 8, 'Hannah', 275.40, '2025-08-08');
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r where o.rest_id=r.rest_id;
++-----------+--------+------------+-----------------+
+| cust_name | o_amt  | o_date     | rest_name       |
++-----------+--------+------------+-----------------+
+| Alice     | 250.75 | 2025-08-01 | Spice Hub       |
+| Bob       | 180.00 | 2025-08-02 | The Dadar Diner |
+| Charlie   | 320.50 | 2025-08-03 | Seafood Delight |
+| Diana     | 150.25 | 2025-08-04 | Vashi Vibes     |
+| Ethan     | 290.00 | 2025-08-05 | Panvel Palace   |
+| Fiona     | 220.00 | 2025-08-06 | Thane Treats    |
+| George    | 310.80 | 2025-08-07 | Mumbai Magic    |
+| Hannah    | 275.40 | 2025-08-08 | Colaba Café     |
++-----------+--------+------------+-----------------+
+8 rows in set (0.00 sec)
+
+mysql> select r.rest_name,o.o_amt from orders o inner join restinfo r where o.rest_id=r.rest_id;
++-----------------+--------+
+| rest_name       | o_amt  |
++-----------------+--------+
+| Spice Hub       | 250.75 |
+| The Dadar Diner | 180.00 |
+| Seafood Delight | 320.50 |
+| Vashi Vibes     | 150.25 |
+| Panvel Palace   | 290.00 |
+| Thane Treats    | 220.00 |
+| Mumbai Magic    | 310.80 |
+| Colaba Café     | 275.40 |
++-----------------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai;
+    '> ;
+    '> ^C
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai;
+    '> cc
+    '>
+    '>
+    '>
+    '> ^C
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai;
+    '> ^C
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai';
++-----------+--------+------------+--------------+
+| cust_name | o_amt  | o_date     | rest_name    |
++-----------+--------+------------+--------------+
+| Alice     | 250.75 | 2025-08-01 | Spice Hub    |
+| George    | 310.80 | 2025-08-07 | Mumbai Magic |
++-----------+--------+------------+--------------+
+2 rows in set (0.01 sec)
+
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai,Colaba';
+Empty set (0.00 sec)
+
+mysql> select o.cust_name,o.o_amt,o.o_date,r.rest_name from orders o inner join restinfo r on o.rest_id=r.rest_id where r.location='Mumbai','Colaba';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ','Colaba'' at line 1
+mysql> select r.rest_name ,sum(O.o_amt) as Sum_Of_Amount from restinfo r inner join orders o where r.rest_id=o.rest_id;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'myresto.r.rest_name'; this is incompatible with sql_mode=only_full_group_by
+mysql> select r.rest_name ,sum(O.o_amt) as Sum_Of_Amount from restinfo r inner join orders o on r.rest_id=o.rest_id group by r.rest_name;
++-----------------+---------------+
+| rest_name       | Sum_Of_Amount |
++-----------------+---------------+
+| Spice Hub       |        250.75 |
+| Seafood Delight |        320.50 |
+| The Dadar Diner |        180.00 |
+| Panvel Palace   |        290.00 |
+| Vashi Vibes     |        150.25 |
+| Thane Treats    |        220.00 |
+| Mumbai Magic    |        310.80 |
+| Colaba Café     |        275.40 |
++-----------------+---------------+
+8 rows in set (0.00 sec)
+
+mysql> select r.rest_name from restinfo r inner join orders o on r.rest_id=o.rest_id where o.o_id is null;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO restinfo (rest_id, rest_name, location) VALUES
+    -> (9, 'NoOrder Bistro', 'Mumbai'),
+    -> (10, 'Quiet Corner', 'Thane');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select r.rest_name from restinfo r inner join orders o on r.rest_id=o.rest_id where o.o_id is null;
+Empty set (0.00 sec)
+
+mysql> select r.rest_name from restinfo r left join orders o on r.rest_id=o.rest_id where o.o_id is null;
++----------------+
+| rest_name      |
++----------------+
+| NoOrder Bistro |
+| Quiet Corner   |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> select r.rest_name,o.cust_name from restinfo r inner join orders o where r.rest_id=o.rest_id ;
++-----------------+-----------+
+| rest_name       | cust_name |
++-----------------+-----------+
+| Spice Hub       | Alice     |
+| The Dadar Diner | Bob       |
+| Seafood Delight | Charlie   |
+| Vashi Vibes     | Diana     |
+| Panvel Palace   | Ethan     |
+| Thane Treats    | Fiona     |
+| Mumbai Magic    | George    |
+| Colaba Café     | Hannah    |
++-----------------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select r.rest_name,o.cust_name,o_.amt,o.o_date, from restinfo r right join orders o where r.rest_id=o.rest_id ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from restinfo r right join orders o where r.rest_id=o.rest_id' at line 1
+mysql> select r.rest_name,o.cust_name,o_.amt,o.o_date from restinfo r right join orders o where r.rest_id=o.rest_id ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where r.rest_id=o.rest_id' at line 1
+mysql> select r.rest_name,o.cust_name,o_.amt,o.o_date from restinfo r right join orders o on r.rest_id=o.rest_id ;
+ERROR 1054 (42S22): Unknown column 'o_.amt' in 'field list'
+mysql> select r.rest_name,o.cust_name,o.o_amt,o.o_date from restinfo r right join orders o where r.rest_id=o.rest_id ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where r.rest_id=o.rest_id' at line 1
+mysql> select r.rest_name,o.cust_name,o.o_amt,o.o_date from restinfo r right join orders o on r.rest_id=o.rest_id ;
++-----------------+-----------+--------+------------+
+| rest_name       | cust_name | o_amt  | o_date     |
++-----------------+-----------+--------+------------+
+| Spice Hub       | Alice     | 250.75 | 2025-08-01 |
+| The Dadar Diner | Bob       | 180.00 | 2025-08-02 |
+| Seafood Delight | Charlie   | 320.50 | 2025-08-03 |
+| Vashi Vibes     | Diana     | 150.25 | 2025-08-04 |
+| Panvel Palace   | Ethan     | 290.00 | 2025-08-05 |
+| Thane Treats    | Fiona     | 220.00 | 2025-08-06 |
+| Mumbai Magic    | George    | 310.80 | 2025-08-07 |
+| Colaba Café     | Hannah    | 275.40 | 2025-08-08 |
++-----------------+-----------+--------+------------+
+8 rows in set (0.00 sec)
+
+mysql>
