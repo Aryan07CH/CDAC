@@ -1,0 +1,214 @@
+mysql> CREATE TABLE empinfo (
+    ->     empid INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     dept VARCHAR(30),
+    ->     salary DECIMAL(10,2),
+    ->     age INT,
+    ->     gender ENUM('M', 'F'),
+    ->     city VARCHAR(30)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO empinfo (empid, name, dept, salary, age, gender, city) VALUES
+    -> (1, 'Rahul Sharma', 'IT', 55000.00, 28, 'M', 'Mumbai'),
+    -> (2, 'Priya Mehta', 'HR', 48000.50, 26, 'F', 'Pune'),
+    -> (3, 'Amit Verma', 'Finance', 62000.75, 32, 'M', 'Thane'),
+    -> (4, 'Sneha Iyer', 'IT', 59000.00, 30, 'F', 'Mumbai'),
+    -> (5, 'Karan Malhotra', 'Marketing', 45000.00, 29, 'M', 'Nashik'),
+    -> (6, 'Divya Singh', 'Finance', 61000.25, 33, 'F', 'Pune'),
+    -> (7, 'Rohit Desai', 'HR', 47000.00, 27, 'M', 'Thane'),
+    -> (8, 'Meera Patil', 'IT', 60000.00, 31, 'F', 'Mumbai'),
+    -> (9, 'Siddharth Jain', 'Marketing', 44000.00, 28, 'M', 'Nagpur'),
+    -> (10, 'Anjali Nair', 'Finance', 63000.00, 35, 'F', 'Pune');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> desc empinfo;
++--------+---------------+------+-----+---------+-------+
+| Field  | Type          | Null | Key | Default | Extra |
++--------+---------------+------+-----+---------+-------+
+| empid  | int           | NO   | PRI | NULL    |       |
+| name   | varchar(50)   | YES  |     | NULL    |       |
+| dept   | varchar(30)   | YES  |     | NULL    |       |
+| salary | decimal(10,2) | YES  |     | NULL    |       |
+| age    | int           | YES  |     | NULL    |       |
+| gender | enum('M','F') | YES  |     | NULL    |       |
+| city   | varchar(30)   | YES  |     | NULL    |       |
++--------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from empinfo;
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     2 | Priya Mehta    | HR        | 48000.50 |   26 | F      | Pune   |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     6 | Divya Singh    | Finance   | 61000.25 |   33 | F      | Pune   |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
+|    10 | Anjali Nair    | Finance   | 63000.00 |   35 | F      | Pune   |
++-------+----------------+-----------+----------+------+--------+--------+
+10 rows in set (0.00 sec)
+
+mysql> select * from empinfo where dept='it' and salary>50000;
++-------+--------------+------+----------+------+--------+--------+
+| empid | name         | dept | salary   | age  | gender | city   |
++-------+--------------+------+----------+------+--------+--------+
+|     1 | Rahul Sharma | IT   | 55000.00 |   28 | M      | Mumbai |
+|     4 | Sneha Iyer   | IT   | 59000.00 |   30 | F      | Mumbai |
+|     8 | Meera Patil  | IT   | 60000.00 |   31 | F      | Mumbai |
++-------+--------------+------+----------+------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from empinfo where city='mumbai' or city='thane';
++-------+--------------+---------+----------+------+--------+--------+
+| empid | name         | dept    | salary   | age  | gender | city   |
++-------+--------------+---------+----------+------+--------+--------+
+|     1 | Rahul Sharma | IT      | 55000.00 |   28 | M      | Mumbai |
+|     3 | Amit Verma   | Finance | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer   | IT      | 59000.00 |   30 | F      | Mumbai |
+|     7 | Rohit Desai  | HR      | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil  | IT      | 60000.00 |   31 | F      | Mumbai |
++-------+--------------+---------+----------+------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from empinfo where dept is not hr;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'hr' at line 1
+mysql> select * from empinfo where dept!=hr;
+ERROR 1054 (42S22): Unknown column 'hr' in 'where clause'
+mysql> select * from empinfo where dept!='hr';
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     6 | Divya Singh    | Finance   | 61000.25 |   33 | F      | Pune   |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
+|    10 | Anjali Nair    | Finance   | 63000.00 |   35 | F      | Pune   |
++-------+----------------+-----------+----------+------+--------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select * from empinfo where dept='finance' or salary>40000;
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     2 | Priya Mehta    | HR        | 48000.50 |   26 | F      | Pune   |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     6 | Divya Singh    | Finance   | 61000.25 |   33 | F      | Pune   |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
+|    10 | Anjali Nair    | Finance   | 63000.00 |   35 | F      | Pune   |
++-------+----------------+-----------+----------+------+--------+--------+
+10 rows in set (0.00 sec)
+
+mysql> select * from empinfo where dept='finance' or salary>50000;
++-------+--------------+---------+----------+------+--------+--------+
+| empid | name         | dept    | salary   | age  | gender | city   |
++-------+--------------+---------+----------+------+--------+--------+
+|     1 | Rahul Sharma | IT      | 55000.00 |   28 | M      | Mumbai |
+|     3 | Amit Verma   | Finance | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer   | IT      | 59000.00 |   30 | F      | Mumbai |
+|     6 | Divya Singh  | Finance | 61000.25 |   33 | F      | Pune   |
+|     8 | Meera Patil  | IT      | 60000.00 |   31 | F      | Mumbai |
+|    10 | Anjali Nair  | Finance | 63000.00 |   35 | F      | Pune   |
++-------+--------------+---------+----------+------+--------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from empinfo where (dept='finance') xor (salary>50000);
++-------+--------------+------+----------+------+--------+--------+
+| empid | name         | dept | salary   | age  | gender | city   |
++-------+--------------+------+----------+------+--------+--------+
+|     1 | Rahul Sharma | IT   | 55000.00 |   28 | M      | Mumbai |
+|     4 | Sneha Iyer   | IT   | 59000.00 |   30 | F      | Mumbai |
+|     8 | Meera Patil  | IT   | 60000.00 |   31 | F      | Mumbai |
++-------+--------------+------+----------+------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from empinfo where dept='marketing' and (salary>40000 or age<30);
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
++-------+----------------+-----------+----------+------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from empinfo where city!='pune' and salary>35000;
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
++-------+----------------+-----------+----------+------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from empinfo where (dept='it') or (dept!='finance);
+    '> select * from empinfo where (dept='it') or (dept!='finance');
+    '> ^C
+mysql> select * from empinfo where (dept='it') or (dept!='finance');
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     2 | Priya Mehta    | HR        | 48000.50 |   26 | F      | Pune   |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
++-------+----------------+-----------+----------+------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from empinfo where gender='m' xor (salary>60000 and dept='hr');
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
++-------+----------------+-----------+----------+------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from empinfo where age>30 and (dept='it' and dept='finance');
+Empty set (0.00 sec)
+
+mysql> select * from empinfo where age>30 and (dept='it' or dept='finance');
++-------+-------------+---------+----------+------+--------+--------+
+| empid | name        | dept    | salary   | age  | gender | city   |
++-------+-------------+---------+----------+------+--------+--------+
+|     3 | Amit Verma  | Finance | 62000.75 |   32 | M      | Thane  |
+|     6 | Divya Singh | Finance | 61000.25 |   33 | F      | Pune   |
+|     8 | Meera Patil | IT      | 60000.00 |   31 | F      | Mumbai |
+|    10 | Anjali Nair | Finance | 63000.00 |   35 | F      | Pune   |
++-------+-------------+---------+----------+------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from empinfo where city!='pune' and salary<50000;
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
++-------+----------------+-----------+----------+------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql>
