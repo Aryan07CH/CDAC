@@ -1,0 +1,226 @@
+mysql> create table studinfo(stud_id int primary key,name varchar(20),gender enum('M','F'),age int,marks int);
+ERROR 1050 (42S01): Table 'studinfo' already exists
+mysql> create table studinfodb(stud_id int primary key,name varchar(20),gender enum('M','F'),age int,marks int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> drop table studinfodb;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table studinfodb(stud_id int primary key,name varchar(20),dept varchar(10),gender enum('M','F'),age int,marks int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO studinfodb (stud_id, name, dept, gender, age, marks) VALUES
+    -> (1, 'Aarav', 'CSE', 'M', 20, 85),
+    -> (2, 'Priya', 'ECE', 'F', 21, 78),
+    -> (3, 'Rohan', 'MECH', 'M', 22, 69),
+    -> (4, 'Sneha', 'CSE', 'F', 20, 92),
+    -> (5, 'Karan', 'CIVIL', 'M', 23, 74),
+    -> (6, 'Megha', 'ECE', 'F', 21, 88),
+    -> (7, 'Arjun', 'CSE', 'M', 19, 95),
+    -> (8, 'Divya', 'IT', 'F', 20, 81),
+    -> (9, 'Nikhil', 'IT', 'M', 22, 67),
+    -> (10, 'Anjali', 'CIVIL', 'F', 21, 76);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select count(name) as Student from studinfodb group by dept;
++---------+
+| Student |
++---------+
+|       3 |
+|       2 |
+|       1 |
+|       2 |
+|       2 |
++---------+
+5 rows in set (0.01 sec)
+
+mysql> select dept,count(name) as Student from studinfodb group by dept;
++-------+---------+
+| dept  | Student |
++-------+---------+
+| CSE   |       3 |
+| ECE   |       2 |
+| MECH  |       1 |
+| CIVIL |       2 |
+| IT    |       2 |
++-------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select dept,avg(marks) as Student from studinfodb group by dept;
++-------+---------+
+| dept  | Student |
++-------+---------+
+| CSE   | 90.6667 |
+| ECE   | 83.0000 |
+| MECH  | 69.0000 |
+| CIVIL | 75.0000 |
+| IT    | 74.0000 |
++-------+---------+
+5 rows in set (0.02 sec)
+
+mysql> select gender,count(gender) from studinfodb group by gender;
++--------+---------------+
+| gender | count(gender) |
++--------+---------------+
+| M      |             5 |
+| F      |             5 |
++--------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> select dept,min(marks) as MIN_Marks from studinfodb group by dept;
++-------+-----------+
+| dept  | MIN_Marks |
++-------+-----------+
+| CSE   |        85 |
+| ECE   |        78 |
+| MECH  |        69 |
+| CIVIL |        74 |
+| IT    |        67 |
++-------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select dept,max(marks) as Max_Marks from studinfodb group by dept;
++-------+-----------+
+| dept  | Max_Marks |
++-------+-----------+
+| CSE   |        95 |
+| ECE   |        88 |
+| MECH  |        69 |
+| CIVIL |        76 |
+| IT    |        81 |
++-------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select avg(age) as AVG_AGE from studinfodb group by gender and dept;
++---------+
+| AVG_AGE |
++---------+
+| 20.9000 |
++---------+
+1 row in set, 9 warnings (0.01 sec)
+
+mysql> select dept,gender,avg(age) as AVG_AGE from studinfodb group by gender and dept;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'studentdb.studinfodb.dept' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select dept,gender,avg(age) as AVG_AGE from studinfodb group by gender,dept;
++-------+--------+---------+
+| dept  | gender | AVG_AGE |
++-------+--------+---------+
+| CSE   | M      | 19.5000 |
+| ECE   | F      | 21.0000 |
+| MECH  | M      | 22.0000 |
+| CSE   | F      | 20.0000 |
+| CIVIL | M      | 23.0000 |
+| IT    | F      | 20.0000 |
+| IT    | M      | 22.0000 |
+| CIVIL | F      | 21.0000 |
++-------+--------+---------+
+8 rows in set (0.00 sec)
+
+mysql> select dept,gender,avg(age) as AVG_AGE from studinfodb group by gender,dept order by gender;
++-------+--------+---------+
+| dept  | gender | AVG_AGE |
++-------+--------+---------+
+| CIVIL | M      | 23.0000 |
+| CSE   | M      | 19.5000 |
+| IT    | M      | 22.0000 |
+| MECH  | M      | 22.0000 |
+| CIVIL | F      | 21.0000 |
+| CSE   | F      | 20.0000 |
+| ECE   | F      | 21.0000 |
+| IT    | F      | 20.0000 |
++-------+--------+---------+
+8 rows in set (0.00 sec)
+
+mysql> select dept,avg(age) as AVG_AGE from studinfodb group by gender,dept order by gender;
++-------+---------+
+| dept  | AVG_AGE |
++-------+---------+
+| CIVIL | 23.0000 |
+| CSE   | 19.5000 |
+| IT    | 22.0000 |
+| MECH  | 22.0000 |
+| CIVIL | 21.0000 |
+| CSE   | 20.0000 |
+| ECE   | 21.0000 |
+| IT    | 20.0000 |
++-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> select dept,sum(marks) as AVG_AGE from studinfodb group by dept;
++-------+---------+
+| dept  | AVG_AGE |
++-------+---------+
+| CSE   |     272 |
+| ECE   |     166 |
+| MECH  |      69 |
+| CIVIL |     150 |
+| IT    |     148 |
++-------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select dept,sum(marks) as Total_Marks from studinfodb group by dept;
++-------+-------------+
+| dept  | Total_Marks |
++-------+-------------+
+| CSE   |         272 |
+| ECE   |         166 |
+| MECH  |          69 |
+| CIVIL |         150 |
+| IT    |         148 |
++-------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select gender,min(marks) as Min_Marks from studinfodb group by gender;
++--------+-----------+
+| gender | Min_Marks |
++--------+-----------+
+| M      |        67 |
+| F      |        76 |
++--------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select Age,count(name) as NO_OF_STUD from studinfodb group by age;
++------+------------+
+| Age  | NO_OF_STUD |
++------+------------+
+|   20 |          3 |
+|   21 |          3 |
+|   22 |          2 |
+|   23 |          1 |
+|   19 |          1 |
++------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select dept,count(name) as Student,avg(marks) as MARKS from studinfodb group by dept;
++-------+---------+---------+
+| dept  | Student | MARKS   |
++-------+---------+---------+
+| CSE   |       3 | 90.6667 |
+| ECE   |       2 | 83.0000 |
+| MECH  |       1 | 69.0000 |
+| CIVIL |       2 | 75.0000 |
+| IT    |       2 | 74.0000 |
++-------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select sud_id,count(dept) from studinfodb group by gender,dept;
+ERROR 1054 (42S22): Unknown column 'sud_id' in 'field list'
+mysql> select stud_id,count(dept) from studinfodb group by gender,dept;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'studentdb.studinfodb.stud_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select dept,gender,count(*) as Total_student from studinfodb group by gender,dept;
++-------+--------+---------------+
+| dept  | gender | Total_student |
++-------+--------+---------------+
+| CSE   | M      |             2 |
+| ECE   | F      |             2 |
+| MECH  | M      |             1 |
+| CSE   | F      |             1 |
+| CIVIL | M      |             1 |
+| IT    | F      |             1 |
+| IT    | M      |             1 |
+| CIVIL | F      |             1 |
++-------+--------+---------------+
+8 rows in set (0.00 sec)
+
+mysql>
