@@ -1,0 +1,220 @@
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database Cust_Bank;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> create table custinfo(cust_id int primary key,cust_name varchar(20), City enum('Mumbai','Pune','Thane'));
+ERROR 1046 (3D000): No database selected
+mysql> use cust_bank;
+Database changed
+mysql> create table custinfo(cust_id int primary key,cust_name varchar(20), City enum('Mumbai','Pune','Thane'));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> create table bank(acc_id int primary key,cust_id int,b_name varchar(20),balance decimal(10,2),foreign key (cust_id) references custinfo(cust_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO custinfo (cust_id, cust_name, City) VALUES
+    -> (1, 'Amit', 'Mumbai'),
+    -> (2, 'Priya', 'Pune'),
+    -> (3, 'Rahul', 'Thane'),
+    -> (4, NULL, 'Mumbai'),
+    -> (5, 'Sneha', NULL),
+    -> (6, NULL, NULL),
+    -> (7, 'Karan', 'Pune'),
+    -> (8, 'Divya', 'Thane');
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO bank (acc_id, cust_id, b_name, balance) VALUES
+    -> (101, 1, 'SBI', 150000.50),
+    -> (102, 2, 'HDFC', 250000.00),
+    -> (103, 3, 'ICICI', 320000.75),
+    -> (104, 4, 'SBI', 78000.00),
+    -> (105, 5, 'Axis', 81000.00),
+    -> (106, 6, 'BOI', 50000.25),
+    -> (107, 7, 'HDFC', 47000.10),
+    -> (108, 8, 'ICICI', 39000.80);
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name from custinfo c inner join bank b where c.cust_id=b.cust_id;
++-----------+--------+--------+--------+
+| cust_name | city   | acc_id | b_name |
++-----------+--------+--------+--------+
+| Amit      | Mumbai |    101 | SBI    |
+| Priya     | Pune   |    102 | HDFC   |
+| Rahul     | Thane  |    103 | ICICI  |
+| NULL      | Mumbai |    104 | SBI    |
+| Sneha     | NULL   |    105 | Axis   |
+| NULL      | NULL   |    106 | BOI    |
+| Karan     | Pune   |    107 | HDFC   |
+| Divya     | Thane  |    108 | ICICI  |
++-----------+--------+--------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name from custinfo c inner join bank b on c.cust_id=b.cust_id where cust_name is not null;
++-----------+--------+--------+--------+
+| cust_name | city   | acc_id | b_name |
++-----------+--------+--------+--------+
+| Amit      | Mumbai |    101 | SBI    |
+| Priya     | Pune   |    102 | HDFC   |
+| Rahul     | Thane  |    103 | ICICI  |
+| Sneha     | NULL   |    105 | Axis   |
+| Karan     | Pune   |    107 | HDFC   |
+| Divya     | Thane  |    108 | ICICI  |
++-----------+--------+--------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name from custinfo c inner join bank b on c.cust_id=b.cust_id where cust_name is not null and c.city is not null;
++-----------+--------+--------+--------+
+| cust_name | city   | acc_id | b_name |
++-----------+--------+--------+--------+
+| Amit      | Mumbai |    101 | SBI    |
+| Priya     | Pune   |    102 | HDFC   |
+| Rahul     | Thane  |    103 | ICICI  |
+| Karan     | Pune   |    107 | HDFC   |
+| Divya     | Thane  |    108 | ICICI  |
++-----------+--------+--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name,b.balance from custinfo c inner join bank b on c.cust_id=b.cust_id where cust_name is not null and c.city is not null;
++-----------+--------+--------+--------+-----------+
+| cust_name | city   | acc_id | b_name | balance   |
++-----------+--------+--------+--------+-----------+
+| Amit      | Mumbai |    101 | SBI    | 150000.50 |
+| Priya     | Pune   |    102 | HDFC   | 250000.00 |
+| Rahul     | Thane  |    103 | ICICI  | 320000.75 |
+| Karan     | Pune   |    107 | HDFC   |  47000.10 |
+| Divya     | Thane  |    108 | ICICI  |  39000.80 |
++-----------+--------+--------+--------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where cust_name is not null and c.city is not null;
++-----------+--------+--------+--------+-----------+
+| cust_name | city   | acc_id | b_name | balance   |
++-----------+--------+--------+--------+-----------+
+| Amit      | Mumbai |    101 | SBI    | 150000.50 |
+| Priya     | Pune   |    102 | HDFC   | 250000.00 |
+| Rahul     | Thane  |    103 | ICICI  | 320000.75 |
+| Karan     | Pune   |    107 | HDFC   |  47000.10 |
+| Divya     | Thane  |    108 | ICICI  |  39000.80 |
++-----------+--------+--------+--------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cust_name,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where cust_name is not null and c.city is not null;
++-----------+-----------+
+| cust_name | balance   |
++-----------+-----------+
+| Amit      | 150000.50 |
+| Priya     | 250000.00 |
+| Rahul     | 320000.75 |
+| Karan     |  47000.10 |
+| Divya     |  39000.80 |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cust_name,c.city,b.acc_id,b.b_name,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where c.city='Pune';
++-----------+------+--------+--------+-----------+
+| cust_name | city | acc_id | b_name | balance   |
++-----------+------+--------+--------+-----------+
+| Priya     | Pune |    102 | HDFC   | 250000.00 |
+| Karan     | Pune |    107 | HDFC   |  47000.10 |
++-----------+------+--------+--------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select c.cust_name,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where b.acc_id is null;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO custinfo (cust_id, cust_name, City) VALUES
+    -> (9, 'Yash', 'Pune'),
+    -> (10, 'Meera', NULL);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select c.cust_name,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where b.acc_id is null;
++-----------+---------+
+| cust_name | balance |
++-----------+---------+
+| Yash      |    NULL |
+| Meera     |    NULL |
++-----------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select c.cust_name,b.acc_id,b.balance from custinfo c left join bank b on c.cust_id=b.cust_id where b.acc_id is null;
++-----------+--------+---------+
+| cust_name | acc_id | balance |
++-----------+--------+---------+
+| Yash      |   NULL |    NULL |
+| Meera     |   NULL |    NULL |
++-----------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select b.acc_id,b.b_name,b.balance,c.cust_name from custinfo c right join bank b where c.cust_id=b.cust_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where c.cust_id=b.cust_id' at line 1
+mysql> select b.acc_id,b.b_name,b.balance,c.cust_name from custinfo c right join bank b on c.cust_id=b.cust_id;
++--------+--------+-----------+-----------+
+| acc_id | b_name | balance   | cust_name |
++--------+--------+-----------+-----------+
+|    101 | SBI    | 150000.50 | Amit      |
+|    102 | HDFC   | 250000.00 | Priya     |
+|    103 | ICICI  | 320000.75 | Rahul     |
+|    104 | SBI    |  78000.00 | NULL      |
+|    105 | Axis   |  81000.00 | Sneha     |
+|    106 | BOI    |  50000.25 | NULL      |
+|    107 | HDFC   |  47000.10 | Karan     |
+|    108 | ICICI  |  39000.80 | Divya     |
++--------+--------+-----------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select b.acc_id,b.b_name,b.balance,c.cust_name from custinfo c right join bank b on c.cust_id=b.cust_id where b.acc_id is not null;
++--------+--------+-----------+-----------+
+| acc_id | b_name | balance   | cust_name |
++--------+--------+-----------+-----------+
+|    101 | SBI    | 150000.50 | Amit      |
+|    102 | HDFC   | 250000.00 | Priya     |
+|    103 | ICICI  | 320000.75 | Rahul     |
+|    104 | SBI    |  78000.00 | NULL      |
+|    105 | Axis   |  81000.00 | Sneha     |
+|    106 | BOI    |  50000.25 | NULL      |
+|    107 | HDFC   |  47000.10 | Karan     |
+|    108 | ICICI  |  39000.80 | Divya     |
++--------+--------+-----------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select c.cust_name,b.balance from custinfo c inner join bank b on c.cust_id=b.cust_id where b.balance>50000;
++-----------+-----------+
+| cust_name | balance   |
++-----------+-----------+
+| Amit      | 150000.50 |
+| Priya     | 250000.00 |
+| Rahul     | 320000.75 |
+| NULL      |  78000.00 |
+| Sneha     |  81000.00 |
+| NULL      |  50000.25 |
++-----------+-----------+
+6 rows in set (0.01 sec)
+
+mysql> select c.cust_name,b.balance from custinfo c inner join bank b on c.cust_id=b.cust_id where b.balance>50000 and cust_name is not null;
++-----------+-----------+
+| cust_name | balance   |
++-----------+-----------+
+| Amit      | 150000.50 |
+| Priya     | 250000.00 |
+| Rahul     | 320000.75 |
+| Sneha     |  81000.00 |
++-----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql>
