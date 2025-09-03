@@ -14,8 +14,6 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql> create database Cust_Bank;
 Query OK, 1 row affected (0.02 sec)
 
-mysql> create table custinfo(cust_id int primary key,cust_name varchar(20), City enum('Mumbai','Pune','Thane'));
-ERROR 1046 (3D000): No database selected
 mysql> use cust_bank;
 Database changed
 mysql> create table custinfo(cust_id int primary key,cust_name varchar(20), City enum('Mumbai','Pune','Thane'));
@@ -161,8 +159,6 @@ mysql> select c.cust_name,b.acc_id,b.balance from custinfo c left join bank b on
 +-----------+--------+---------+
 2 rows in set (0.00 sec)
 
-mysql> select b.acc_id,b.b_name,b.balance,c.cust_name from custinfo c right join bank b where c.cust_id=b.cust_id;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where c.cust_id=b.cust_id' at line 1
 mysql> select b.acc_id,b.b_name,b.balance,c.cust_name from custinfo c right join bank b on c.cust_id=b.cust_id;
 +--------+--------+-----------+-----------+
 | acc_id | b_name | balance   | cust_name |
