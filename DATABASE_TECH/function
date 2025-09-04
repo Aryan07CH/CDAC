@@ -1,0 +1,599 @@
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mycompany;
+Database changed
+mysql> show tables;
++---------------------+
+| Tables_in_mycompany |
++---------------------+
+| depsalarysum        |
+| dept                |
+| emp                 |
+| emp_detail          |
++---------------------+
+4 rows in set (0.06 sec)
+
+mysql> select * from emp;
++--------+----------+----------+--------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name | email              | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+----------+--------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice    | alice@example.com  | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob      | bob@example.com    | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol    | carol@example.com  | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 | 50000.00 |    3.9 |         1 |
+|      4 | E104     | David    | david@example.com  | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma     | emma@example.com   | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank    | frank@example.com  | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace    | grace@example.com  | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 | 52000.00 |    4.1 |         1 |
+|      8 | E108     | Harry    | harry@example.com  | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy      | ivy@example.com    | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack     | jack@example.com   | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia   | sophia@example.com | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam     | liam@example.com   | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
++--------+----------+----------+--------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+12 rows in set (0.03 sec)
+
+mysql> select * from dept;
++---------+-----------+------------------+----------+
+| dept_id | dept_code | dept_name        | dept_loc |
++---------+-----------+------------------+----------+
+|       1 | HR01      | Human Resources  | Mumbai   |
+|       2 | FN02      | Finance          | Chennai  |
+|       3 | IT03      | Information Tech | Pune     |
+|       4 | MK04      | Marketing        | Mumbai   |
+|       5 | LG05      | Logistics        | Chennai  |
+|       6 | AD06      | Administration   | Pune     |
+|       7 | PR07      | Procurement      | Mumbai   |
+|       8 | SA08      | Sales            | Pune     |
+|       9 | RD09      | R&D              | Chennai  |
+|      10 | QA10      | Quality Control  | Mumbai   |
++---------+-----------+------------------+----------+
+10 rows in set (0.01 sec)
+
+mysql> select upper(emp_name) as Employee_Names from emp;
++----------------+
+| Employee_Names |
++----------------+
+| ALICE          |
+| BOB            |
+| CAROL          |
+| DAVID          |
+| EMMA           |
+| FRANK          |
+| GRACE          |
+| HARRY          |
+| IVY            |
+| JACK           |
+| SOPHIA         |
+| LIAM           |
++----------------+
+12 rows in set (0.00 sec)
+
+mysql> select upper(dept_name) as Job_title from dept;
++------------------+
+| Job_title        |
++------------------+
+| HUMAN RESOURCES  |
+| FINANCE          |
+| INFORMATION TECH |
+| MARKETING        |
+| LOGISTICS        |
+| ADMINISTRATION   |
+| PROCUREMENT      |
+| SALES            |
+| R&D              |
+| QUALITY CONTROL  |
++------------------+
+10 rows in set (0.00 sec)
+
+mysql> select len(emp_name) as Name_LEN from emp;
+ERROR 1305 (42000): FUNCTION mycompany.len does not exist
+mysql> select length(emp_name) as Name_LEN from emp;
++----------+
+| Name_LEN |
++----------+
+|        5 |
+|        3 |
+|        5 |
+|        5 |
+|        4 |
+|        5 |
+|        5 |
+|        5 |
+|        3 |
+|        4 |
+|        6 |
+|        4 |
++----------+
+12 rows in set (0.00 sec)
+
+mysql> select emp_name,length(emp_name) as Name_LEN from emp;
++----------+----------+
+| emp_name | Name_LEN |
++----------+----------+
+| Alice    |        5 |
+| Bob      |        3 |
+| Carol    |        5 |
+| David    |        5 |
+| Emma     |        4 |
+| Frank    |        5 |
+| Grace    |        5 |
+| Harry    |        5 |
+| Ivy      |        3 |
+| Jack     |        4 |
+| Sophia   |        6 |
+| Liam     |        4 |
++----------+----------+
+12 rows in set (0.00 sec)
+
+mysql> select emp_name,reverse(emp_name) as Name_REV from emp;
++----------+----------+
+| emp_name | Name_REV |
++----------+----------+
+| Alice    | ecilA    |
+| Bob      | boB      |
+| Carol    | loraC    |
+| David    | divaD    |
+| Emma     | ammE     |
+| Frank    | knarF    |
+| Grace    | ecarG    |
+| Harry    | yrraH    |
+| Ivy      | yvI      |
+| Jack     | kcaJ     |
+| Sophia   | aihpoS   |
+| Liam     | maiL     |
++----------+----------+
+12 rows in set (0.00 sec)
+
+mysql> select trim(dept_name) as Job_title from dept;
++------------------+
+| Job_title        |
++------------------+
+| Human Resources  |
+| Finance          |
+| Information Tech |
+| Marketing        |
+| Logistics        |
+| Administration   |
+| Procurement      |
+| Sales            |
+| R&D              |
+| Quality Control  |
++------------------+
+10 rows in set (0.00 sec)
+
+mysql> select position('@' in email) as @_POSITION from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '@_POSITION from emp' at line 1
+mysql> select position('@' in email) as POSITION from emp;
++----------+
+| POSITION |
++----------+
+|        6 |
+|        4 |
+|        6 |
+|        6 |
+|        5 |
+|        6 |
+|        6 |
+|        6 |
+|        4 |
+|        5 |
+|        5 |
+|        7 |
++----------+
+12 rows in set (0.00 sec)
+
+mysql> select email,position('@' in email) as POSITION from emp;
++--------------------+----------+
+| email              | POSITION |
++--------------------+----------+
+| alice@example.com  |        6 |
+| bob@example.com    |        4 |
+| carol@example.com  |        6 |
+| david@example.com  |        6 |
+| emma@example.com   |        5 |
+| frank@example.com  |        6 |
+| grace@example.com  |        6 |
+| harry@example.com  |        6 |
+| ivy@example.com    |        4 |
+| jack@example.com   |        5 |
+| liam@example.com   |        5 |
+| sophia@example.com |        7 |
++--------------------+----------+
+12 rows in set (0.00 sec)
+
+mysql> select replace('Information Tech','Software Engineer') from dept;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') from dept' at line 1
+mysql> select replace('Information Tech','Information Tech,'Software Engineer') from dept;
+    '> ^C
+mysql> select replace('Information Tech','Information Tech','Software Engineer') from dept;
++--------------------------------------------------------------------+
+| replace('Information Tech','Information Tech','Software Engineer') |
++--------------------------------------------------------------------+
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
+| Software Engineer                                                  |
++--------------------------------------------------------------------+
+10 rows in set (0.00 sec)
+
+mysql> select replace('Information Tech','Information Tech','Software Engineer'),dept_name from dept;
++--------------------------------------------------------------------+------------------+
+| replace('Information Tech','Information Tech','Software Engineer') | dept_name        |
++--------------------------------------------------------------------+------------------+
+| Software Engineer                                                  | Human Resources  |
+| Software Engineer                                                  | Finance          |
+| Software Engineer                                                  | Information Tech |
+| Software Engineer                                                  | Marketing        |
+| Software Engineer                                                  | Logistics        |
+| Software Engineer                                                  | Administration   |
+| Software Engineer                                                  | Procurement      |
+| Software Engineer                                                  | Sales            |
+| Software Engineer                                                  | R&D              |
+| Software Engineer                                                  | Quality Control  |
++--------------------------------------------------------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> select replace(dept_name,'Information Tech','Software Engineer'),dept_name from dept;
++-----------------------------------------------------------+------------------+
+| replace(dept_name,'Information Tech','Software Engineer') | dept_name        |
++-----------------------------------------------------------+------------------+
+| Human Resources                                           | Human Resources  |
+| Finance                                                   | Finance          |
+| Software Engineer                                         | Information Tech |
+| Marketing                                                 | Marketing        |
+| Logistics                                                 | Logistics        |
+| Administration                                            | Administration   |
+| Procurement                                               | Procurement      |
+| Sales                                                     | Sales            |
+| R&D                                                       | R&D              |
+| Quality Control                                           | Quality Control  |
++-----------------------------------------------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> select replace(dept_name,'Information Tech','Software Engineer') as NEW_NAME,dept_name from dept;
++-------------------+------------------+
+| NEW_NAME          | dept_name        |
++-------------------+------------------+
+| Human Resources   | Human Resources  |
+| Finance           | Finance          |
+| Software Engineer | Information Tech |
+| Marketing         | Marketing        |
+| Logistics         | Logistics        |
+| Administration    | Administration   |
+| Procurement       | Procurement      |
+| Sales             | Sales            |
+| R&D               | R&D              |
+| Quality Control   | Quality Control  |
++-------------------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE TABLE empl (
+    ->     ename VARCHAR(50),
+    ->     job VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> INSERT INTO empl (ename, job) VALUES
+    -> ('Alice', 'Software Engineer'),
+    -> ('Bob', 'Data Analyst'),
+    -> ('Charlie', 'Project Manager'),
+    -> ('Diana', 'QA Engineer'),
+    -> ('Ethan', 'System Administrator');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select concat(ename,' ',job)t
+    -> ^C
+mysql> select concat(ename,' ',job) from empl;
++----------------------------+
+| concat(ename,' ',job)      |
++----------------------------+
+| Alice Software Engineer    |
+| Bob Data Analyst           |
+| Charlie Project Manager    |
+| Diana QA Engineer          |
+| Ethan System Administrator |
++----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select concat(ename,'//',job) from empl;
++-----------------------------+
+| concat(ename,'//',job)      |
++-----------------------------+
+| Alice//Software Engineer    |
+| Bob//Data Analyst           |
+| Charlie//Project Manager    |
+| Diana//QA Engineer          |
+| Ethan//System Administrator |
++-----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select left(dept_name,0,3) as Job_title from dept;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',3) as Job_title from dept' at line 1
+mysql> select substring(dept_name,0,3) as Job_title from dept;
++-----------+
+| Job_title |
++-----------+
+|           |
+|           |
+|           |
+|           |
+|           |
+|           |
+|           |
+|           |
+|           |
+|           |
++-----------+
+10 rows in set (0.00 sec)
+
+mysql> select substring(dept_name,3) as Job_title from dept;
++----------------+
+| Job_title      |
++----------------+
+| man Resources  |
+| nance          |
+| formation Tech |
+| rketing        |
+| gistics        |
+| ministration   |
+| ocurement      |
+| les            |
+| D              |
+| ality Control  |
++----------------+
+10 rows in set (0.00 sec)
+
+mysql> select substring(dept_name,1,3) as Job_title from dept;
++-----------+
+| Job_title |
++-----------+
+| Hum       |
+| Fin       |
+| Inf       |
+| Mar       |
+| Log       |
+| Adm       |
+| Pro       |
+| Sal       |
+| R&D       |
+| Qua       |
++-----------+
+10 rows in set (0.00 sec)
+
+mysql> select substring(dept_name,1,3) as first_three, substring(dept_name,length(dept_name)-2,3) as last_three from dept;
++-------------+------------+
+| first_three | last_three |
++-------------+------------+
+| Hum         | ces        |
+| Fin         | nce        |
+| Inf         | ech        |
+| Mar         | ing        |
+| Log         | ics        |
+| Adm         | ion        |
+| Pro         | ent        |
+| Sal         | les        |
+| R&D         | R&D        |
+| Qua         | rol        |
++-------------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select substring(emp_name,1,4) as First_four from emp;
++------------+
+| First_four |
++------------+
+| Alic       |
+| Bob        |
+| Caro       |
+| Davi       |
+| Emma       |
+| Fran       |
+| Grac       |
+| Harr       |
+| Ivy        |
+| Jack       |
+| Soph       |
+| Liam       |
++------------+
+12 rows in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2025-09-04 18:55:15 |
++---------------------+
+1 row in set (0.01 sec)
+
+mysql> select now() as current_date;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'current_date' at line 1
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2025-09-04 18:55:39 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select sysdate();
++---------------------+
+| sysdate()           |
++---------------------+
+| 2025-09-04 18:55:56 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select year(join_date) from emp;
++-----------------+
+| year(join_date) |
++-----------------+
+|            2020 |
+|            2019 |
+|            2021 |
+|            2018 |
+|            2022 |
+|            2017 |
+|            2020 |
+|            2023 |
+|            2021 |
+|            2016 |
+|            2023 |
+|            2023 |
++-----------------+
+12 rows in set (0.01 sec)
+
+mysql> select month(join_date) from emp;
++------------------+
+| month(join_date) |
++------------------+
+|                1 |
+|                3 |
+|                7 |
+|                6 |
+|                2 |
+|                1 |
+|               11 |
+|                5 |
+|                8 |
+|                4 |
+|                7 |
+|                6 |
++------------------+
+12 rows in set (0.00 sec)
+
+mysql> select month(join_date),monthname(join_date) from emp;
++------------------+----------------------+
+| month(join_date) | monthname(join_date) |
++------------------+----------------------+
+|                1 | January              |
+|                3 | March                |
+|                7 | July                 |
+|                6 | June                 |
+|                2 | February             |
+|                1 | January              |
+|               11 | November             |
+|                5 | May                  |
+|                8 | August               |
+|                4 | April                |
+|                7 | July                 |
+|                6 | June                 |
++------------------+----------------------+
+12 rows in set (0.00 sec)
+
+mysql> select day(join_date),dayname(join_date) from emp;
++----------------+--------------------+
+| day(join_date) | dayname(join_date) |
++----------------+--------------------+
+|             10 | Friday             |
+|              5 | Tuesday            |
+|             12 | Monday             |
+|              1 | Friday             |
+|             14 | Monday             |
+|              9 | Monday             |
+|             20 | Friday             |
+|             10 | Wednesday          |
+|              1 | Sunday             |
+|             18 | Monday             |
+|              1 | Saturday           |
+|             15 | Thursday           |
++----------------+--------------------+
+12 rows in set (0.00 sec)
+
+mysql> select datediff(current(),date(join_date)) from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(),date(join_date)) from emp' at line 1
+mysql> select datediff(curdate(),date(join_date)) from emp;
++-------------------------------------+
+| datediff(curdate(),date(join_date)) |
++-------------------------------------+
+|                                2064 |
+|                                2375 |
+|                                1515 |
+|                                2652 |
+|                                1298 |
+|                                3160 |
+|                                1749 |
+|                                 848 |
+|                                1495 |
+|                                3426 |
+|                                 796 |
+|                                 812 |
++-------------------------------------+
+12 rows in set (0.00 sec)
+
+mysql> select datediff(curdate(),date(join_date)) as days_worked from emp;
++-------------+
+| days_worked |
++-------------+
+|        2064 |
+|        2375 |
+|        1515 |
+|        2652 |
+|        1298 |
+|        3160 |
+|        1749 |
+|         848 |
+|        1495 |
+|        3426 |
+|         796 |
+|         812 |
++-------------+
+12 rows in set (0.00 sec)
+
+mysql> select yeardiff(curyear(),year(join_date)) as years_worked from emp;
+ERROR 1305 (42000): FUNCTION mycompany.yeardiff does not exist
+mysql> select datediff(curyear(),year(join_date)) as years_worked from emp;
+ERROR 1305 (42000): FUNCTION mycompany.curyear does not exist
+mysql> select datediff(curdate(),year(join_date)) as years_worked from emp;
++--------------+
+| years_worked |
++--------------+
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
+|         NULL |
++--------------+
+12 rows in set, 12 warnings (0.00 sec)
+
+mysql> select TIMESTAMPDIFF(YEAR, DATE(join_date), CURDATE()) AS years_worked from emp;
++--------------+
+| years_worked |
++--------------+
+|            5 |
+|            6 |
+|            4 |
+|            7 |
+|            3 |
+|            8 |
+|            4 |
+|            2 |
+|            4 |
+|            9 |
+|            2 |
+|            2 |
++--------------+
+12 rows in set (0.00 sec)
