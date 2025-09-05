@@ -941,3 +941,575 @@ BEGIN
 END //
 
 DELIMITER ;
+=================================================================================================================================================================================
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mycompary
+ERROR 1049 (42000): Unknown database 'mycompary'
+mysql> use mycompany
+Database changed
+mysql> desc enp
+    -> desc enp^C
+mysql> desc emp;
++-----------+---------------+------+-----+---------+----------------+
+| Field     | Type          | Null | Key | Default | Extra          |
++-----------+---------------+------+-----+---------+----------------+
+| emp_id    | int           | NO   | PRI | NULL    | auto_increment |
+| emp_code  | varchar(10)   | YES  |     | NULL    |                |
+| emp_name  | varchar(20)   | YES  |     | NULL    |                |
+| email     | varchar(50)   | YES  | UNI | NULL    |                |
+| Gender    | enum('M','F') | YES  |     | NULL    |                |
+| DOB       | date          | NO   |     | NULL    |                |
+| dept_id   | int           | YES  | MUL | NULL    |                |
+| join_date | datetime      | NO   |     | NULL    |                |
+| salary    | decimal(10,2) | NO   |     | NULL    |                |
+| rating    | float(2,1)    | NO   |     | NULL    |                |
+| is_active | tinyint(1)    | YES  |     | 1       |                |
++-----------+---------------+------+-----+---------+----------------+
+11 rows in set (0.10 sec)
+
+mysql> delimiter //
+mysql> create trigger bef_insert
+    -> before insert on emp
+    -> for each row
+    -> begin
+    -> if new.salary<0 then
+    -> set new.salary=0;
+    -> end if ;
+    -> end//
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> INSERT INTO emp
+    -> (emp_code, emp_name, email, Gender, DOB, dept_id, join_date, salary, rating, is_active)
+    -> VALUES
+    -> ('E12345', 'John Smith', 'john.smith@email.com', 'M', '1988-05-14', 101, '2020-06-01 09:00:00', -55000.00, 4.5, 1);
+    -> //
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`mycompany`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`dept_id`))
+mysql> select * from dept
+    -> //
++---------+-----------+------------------+----------+
+| dept_id | dept_code | dept_name        | dept_loc |
++---------+-----------+------------------+----------+
+|       1 | HR01      | Human Resources  | Mumbai   |
+|       2 | FN02      | Finance          | Chennai  |
+|       3 | IT03      | Information Tech | Pune     |
+|       4 | MK04      | Marketing        | Mumbai   |
+|       5 | LG05      | Logistics        | Chennai  |
+|       6 | AD06      | Administration   | Pune     |
+|       7 | PR07      | Procurement      | Mumbai   |
+|       8 | SA08      | Sales            | Pune     |
+|       9 | RD09      | R&D              | Chennai  |
+|      10 | QA10      | Quality Control  | Mumbai   |
++---------+-----------+------------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> INSERT INTO dept (dept_id, dept_code, dept_name, dept_loc)
+    -> VALUES (11, 'RD11', 'Research & Development', 'Bangalore');
+    -> //
+ERROR 1406 (22001): Data too long for column 'dept_name' at row 1
+mysql> VALUES (11, 'RD11', 'R&D', 'Bangalore');//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(11, 'RD11', 'R&D', 'Bangalore')' at line 1
+mysql> INSERT INTO dept (dept_id, dept_code, dept_name, dept_loc)
+    -> VALUES (11, 'RD11', 'R&D', 'Bangalore');//
+ERROR 1265 (01000): Data truncated for column 'dept_loc' at row 1
+mysql> INSERT INTO dept (dept_id, dept_code, dept_name, dept_loc)
+    -> VALUES (11, 'RD11', 'R&D', 'Pune');//
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO emp
+    -> (emp_code, emp_name, email, Gender, DOB, dept_id, join_date, salary, rating, is_active)
+    -> VALUES
+    -> ('E10001', 'Alice Johnson', 'alice.johnson@example.com', 'F', '1990-08-15', 3, '2022-01-10 09:30:00', -72000.00, 4.7, 1); //
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from emp//
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name      | email                     | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice         | alice@example.com         | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob           | bob@example.com           | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol         | carol@example.com         | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 | 50000.00 |    3.9 |         1 |
+|      4 | E104     | David         | david@example.com         | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma          | emma@example.com          | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank         | frank@example.com         | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace         | grace@example.com         | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 | 52000.00 |    4.1 |         1 |
+|      8 | E108     | Harry         | harry@example.com         | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy           | ivy@example.com           | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack          | jack@example.com          | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia        | sophia@example.com        | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam          | liam@example.com          | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
+|     14 | E10001   | Alice Johnson | alice.johnson@example.com | F      | 1990-08-15 |       3 | 2022-01-10 09:30:00 |     0.00 |    4.7 |         1 |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> update emp set salary=72000 where emp_id=14//
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp//
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name      | email                     | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice         | alice@example.com         | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob           | bob@example.com           | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol         | carol@example.com         | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 | 50000.00 |    3.9 |         1 |
+|      4 | E104     | David         | david@example.com         | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma          | emma@example.com          | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank         | frank@example.com         | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace         | grace@example.com         | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 | 52000.00 |    4.1 |         1 |
+|      8 | E108     | Harry         | harry@example.com         | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy           | ivy@example.com           | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack          | jack@example.com          | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia        | sophia@example.com        | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam          | liam@example.com          | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
+|     14 | E10001   | Alice Johnson | alice.johnson@example.com | F      | 1990-08-15 |       3 | 2022-01-10 09:30:00 | 72000.00 |    4.7 |         1 |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> create trigger bef_update
+    -> before update on emp
+    -> for each row
+    -> begin
+    -> if new.salary<0 then\
+    -> ^C
+mysql> create trigger bef_update
+    -> before update on emp
+    -> for each row
+    -> begin
+    -> if new.salary<0 then
+    -> set new.salary=0
+    -> end if;
+    -> end//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'end if;
+end' at line 7
+mysql> create trigger bef_update
+    -> before update on emp
+    -> for each row
+    -> begin
+    -> if new.salary<0 then
+    -> set new.salary=0;
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> update emp set salary=-72000 where emp_id=7//
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp//
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name      | email                     | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice         | alice@example.com         | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob           | bob@example.com           | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol         | carol@example.com         | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 | 50000.00 |    3.9 |         1 |
+|      4 | E104     | David         | david@example.com         | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma          | emma@example.com          | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank         | frank@example.com         | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace         | grace@example.com         | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 |     0.00 |    4.1 |         1 |
+|      8 | E108     | Harry         | harry@example.com         | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy           | ivy@example.com           | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack          | jack@example.com          | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia        | sophia@example.com        | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam          | liam@example.com          | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
+|     14 | E10001   | Alice Johnson | alice.johnson@example.com | F      | 1990-08-15 |       3 | 2022-01-10 09:30:00 | 72000.00 |    4.7 |         1 |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> update emp set salary=-72000 where emp_id=3//
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp//
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name      | email                     | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice         | alice@example.com         | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob           | bob@example.com           | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol         | carol@example.com         | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 |     0.00 |    3.9 |         1 |
+|      4 | E104     | David         | david@example.com         | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma          | emma@example.com          | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank         | frank@example.com         | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace         | grace@example.com         | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 |     0.00 |    4.1 |         1 |
+|      8 | E108     | Harry         | harry@example.com         | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy           | ivy@example.com           | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack          | jack@example.com          | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia        | sophia@example.com        | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam          | liam@example.com          | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
+|     14 | E10001   | Alice Johnson | alice.johnson@example.com | F      | 1990-08-15 |       3 | 2022-01-10 09:30:00 | 72000.00 |    4.7 |         1 |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+13 rows in set (0.00 sec)
+
+mysql> INSERT INTO dept (dept_id, dept_code, dept_name, dept_loc)
+    -> VALUES (12, 'SD12', 'Devloper', 'Pune');//
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO emp
+    -> (emp_code, emp_name, email, Gender, DOB, dept_id, join_date, salary, rating, is_active)
+    -> VALUES
+    -> ('E10001', 'Alice Johnson', 'alice.johnson@example.com', '', '1990-02-15', 8, '2021-01-05 19:30:00', -87000.00, 4.7, 1); //
+ERROR 1265 (01000): Data truncated for column 'Gender' at row 1
+mysql> INSERT INTO emp
+    -> (emp_code, emp_name, email, Gender, DOB, dept_id, join_date, salary, rating, is_active)
+    -> VALUES
+    -> ('E115', 'Johnson', 'alice.johnson@example.com','M', '1990-02-15', 8, '2021-01-05 19:30:00', -87000.00, 4.7, 1); //
+ERROR 1062 (23000): Duplicate entry 'alice.johnson@example.com' for key 'emp.email'
+mysql> INSERT INTO emp
+    -> (emp_code, emp_name, email, Gender, DOB, dept_id, join_date, salary, rating, is_active)
+    -> VALUES
+    -> ('E115', 'Johnson', 'johnson@example.com','M', '1990-02-15', 8, '2021-01-05 19:30:00', -87000.00, 4.7, 1); //
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from emp//
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+| emp_id | emp_code | emp_name      | email                     | Gender | DOB        | dept_id | join_date           | salary   | rating | is_active |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+|      1 | E101     | Alice         | alice@example.com         | F      | 1990-05-15 |       1 | 2020-01-10 09:00:00 | 55548.00 |    4.5 |         1 |
+|      2 | E102     | Bob           | bob@example.com           | M      | 1988-08-22 |       2 | 2019-03-05 08:45:00 | 60000.00 |    4.2 |         1 |
+|      3 | E103     | Carol         | carol@example.com         | F      | 1992-11-30 |       3 | 2021-07-12 09:15:00 |     0.00 |    3.9 |         1 |
+|      4 | E104     | David         | david@example.com         | M      | 1991-02-17 |       4 | 2018-06-01 09:00:00 | 65000.00 |    4.7 |         1 |
+|      5 | E105     | Emma          | emma@example.com          | F      | 1995-09-25 |       5 | 2022-02-14 09:30:00 | 48000.00 |    3.8 |         1 |
+|      6 | E106     | Frank         | frank@example.com         | M      | 1985-12-10 |       1 | 2017-01-09 08:30:00 | 70000.00 |    4.9 |         1 |
+|      7 | E107     | Grace         | grace@example.com         | F      | 1993-07-07 |       2 | 2020-11-20 09:00:00 |     0.00 |    4.1 |         1 |
+|      8 | E108     | Harry         | harry@example.com         | M      | 1990-03-18 |       3 | 2023-05-10 09:45:00 | 46000.00 |    3.5 |         1 |
+|      9 | E109     | Ivy           | ivy@example.com           | F      | 1996-01-02 |       4 | 2021-08-01 09:00:00 | 49000.00 |    4.0 |         1 |
+|     10 | E110     | Jack          | jack@example.com          | M      | 1989-06-05 |       5 | 2016-04-18 08:15:00 | 75000.00 |    4.8 |         1 |
+|     11 | E111     | Sophia        | sophia@example.com        | F      | 1994-03-10 |    NULL | 2023-07-01 09:00:00 | 55000.00 |    4.3 |         1 |
+|     12 | E112     | Liam          | liam@example.com          | M      | 1992-12-22 |    NULL | 2023-06-15 08:45:00 | 60000.00 |    4.5 |         1 |
+|     14 | E10001   | Alice Johnson | alice.johnson@example.com | F      | 1990-08-15 |       3 | 2022-01-10 09:30:00 | 72000.00 |    4.7 |         1 |
+|     16 | E115     | Johnson       | johnson@example.com       | M      | 1990-02-15 |       8 | 2021-01-05 19:30:00 |     0.00 |    4.7 |         1 |
++--------+----------+---------------+---------------------------+--------+------------+---------+---------------------+----------+--------+-----------+
+14 rows in set (0.00 sec)
+
+mysql> use studentdb
+Database changed
+mysql> desc empinfo;
+    -> //
++--------+---------------+------+-----+---------+-------+
+| Field  | Type          | Null | Key | Default | Extra |
++--------+---------------+------+-----+---------+-------+
+| empid  | int           | NO   | PRI | NULL    |       |
+| name   | varchar(50)   | YES  |     | NULL    |       |
+| dept   | varchar(30)   | YES  |     | NULL    |       |
+| salary | decimal(10,2) | YES  |     | NULL    |       |
+| age    | int           | YES  |     | NULL    |       |
+| gender | enum('M','F') | YES  |     | NULL    |       |
+| city   | varchar(30)   | YES  |     | NULL    |       |
++--------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from empinfo//
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     2 | Priya Mehta    | HR        | 48000.50 |   26 | F      | Pune   |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     6 | Divya Singh    | Finance   | 61000.25 |   33 | F      | Pune   |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
+|    10 | Anjali Nair    | Finance   | 63000.00 |   35 | F      | Pune   |
++-------+----------------+-----------+----------+------+--------+--------+
+10 rows in set (0.01 sec)
+
+mysql> create trigger chkage
+    -> before insert on empinfo
+    -> for each row
+    -> begin
+    -> if new.age<25 then
+    -> signal sqlstate '45000'
+    -> set msg_text='Error: Age must be above 25';
+    -> end if ;
+    -> end//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'msg_text='Error: Age must be above 25';
+end if ;
+end' at line 7
+mysql> create trigger chkage
+    -> before insert on empinfo
+    -> for each row
+    -> begin
+    -> if new.age<25 then
+    -> signal sqlstate '45000'
+    -> set message_text='Error: Age must be above 25';
+    -> end if ;
+    -> end//
+Query OK, 0 rows affected (0.04 sec)
+
+mysql>  INSERT INTO empinfo (empid, name, dept, salary, age, gender, city)
+    -> VALUES (11, 'Rahul Mehta', 'Finance', 65000.00, 24, 'M', 'Mumbai');//
+ERROR 1644 (45000): Error: Age must be above 25
+mysql> INSERT INTO empinfo (empid, name, dept, salary, age, gender, city)
+    -> VALUES (11, 'Rahul Mehta', 'Finance', 65000.00, 31, 'M', 'Mumbai');//
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create table emp_bouns(emp_id int,name varchar(20),bouns decimal(10,2))//
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> select * from empinfo//
++-------+----------------+-----------+----------+------+--------+--------+
+| empid | name           | dept      | salary   | age  | gender | city   |
++-------+----------------+-----------+----------+------+--------+--------+
+|     1 | Rahul Sharma   | IT        | 55000.00 |   28 | M      | Mumbai |
+|     2 | Priya Mehta    | HR        | 48000.50 |   26 | F      | Pune   |
+|     3 | Amit Verma     | Finance   | 62000.75 |   32 | M      | Thane  |
+|     4 | Sneha Iyer     | IT        | 59000.00 |   30 | F      | Mumbai |
+|     5 | Karan Malhotra | Marketing | 45000.00 |   29 | M      | Nashik |
+|     6 | Divya Singh    | Finance   | 61000.25 |   33 | F      | Pune   |
+|     7 | Rohit Desai    | HR        | 47000.00 |   27 | M      | Thane  |
+|     8 | Meera Patil    | IT        | 60000.00 |   31 | F      | Mumbai |
+|     9 | Siddharth Jain | Marketing | 44000.00 |   28 | M      | Nagpur |
+|    10 | Anjali Nair    | Finance   | 63000.00 |   35 | F      | Pune   |
+|    11 | Rahul Mehta    | Finance   | 65000.00 |   31 | M      | Mumbai |
++-------+----------------+-----------+----------+------+--------+--------+
+11 rows in set (0.00 sec)
+
+mysql> create procedure cal_bouns()
+    -> begin
+    -> declare done int default 0;
+    -> declare v_id int;
+    -> declare v_name varchar(20);
+    -> declare v_salary decimal(10,2);
+    ->
+    -> declare bonus_cur cursor for
+    -> select empid,name,salary;
+    ->
+    -> declare continue handler for not found set dane=1;
+    ->
+    -> open bouns_cur;
+    ->
+    -> lbl:loop
+    -> fetch bouns_cur into v_id,v_name,v_salary;
+    -> if done then
+    -> leave lbl;
+    -> end if;
+    ->
+    -> insert into emp_bouns values(v_id,v_name,v_salary*0.10);
+    ->
+    -> end loop;
+    -> close bouns_cur;
+    -> end//
+ERROR 1193 (HY000): Unknown system variable 'dane'
+mysql> create procedure cal_bouns()
+    -> begin
+    -> declare done int default 0;
+    -> declare v_id int;
+    -> declare v_name varchar(20);
+    -> declare v_salary decimal(10,2);
+    -> declare bonus_cur cursor for
+    -> select empid,name,salary;
+    -> declare continue handler for not found set done=1;
+    -> open bouns_cur;
+    -> lbl:loop
+    -> fetch bouns_cur into v_id,v_name,v_salary;
+    -> if done then
+    -> leave lbl;
+    -> end if;
+    -> insert into emp_bouns values(v_id,v_name,v_salary*0.10);
+    -> end loop;
+    -> close bouns_cur;
+    -> end//
+ERROR 1324 (42000): Undefined CURSOR: bouns_cur
+mysql> create procedure cal_bouns()
+    -> begin
+    -> declare done int default 0;
+    -> declare v_id int;
+    -> declare v_name varchar(20);
+    -> declare v_salary decimal(10,2);
+    -> declare bonus_cur cursor for
+    -> select empid,name,salary;
+    -> declare continue handler for not found set dane=1;
+    -> open bonus_cur;
+    -> lbl:loop
+    -> fetch bouns_cur into v_id,v_name,v_salary;
+    -> ^C
+mysql> create procedure cal_bouns()
+    -> end if;^C
+mysql> ^C
+mysql> ^C
+mysql>  create procedure cal_bouns()
+    ->      begin
+    ->      declare done int default 0
+    ->      declare v_id int
+    ->      declare v_name varchar(20)
+    ->      declare v_salary decimal(10,2)
+    ->      declare bonus_cur cursor for
+    ->      select empid,name,salary;
+    ->      declare continue handler for not found set done=1;
+    ->      open bonus_cur;
+    ->      lbl:loop
+    ->      fetch bonus_cur into v_id,v_name,v_salary;
+    ->      if done then
+    ->      leave lbl;
+    ->      end if;
+    ->     insert into emp_bouns values(v_id,v_name,v_salary*0.10);
+    ->  end loop;
+    ->     close bonus_cur;
+    ->     end//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'declare v_id int
+     declare v_name varchar(20)
+     declare v_salary decimal(1' at line 4
+mysql>  create procedure cal_bouns()
+    ->      begin
+    ->      declare done int default 0;
+    ->      declare v_id int;
+    ->      declare v_name varchar(20);
+    ->      declare v_salary decimal(10,2);
+    ->      declare bonus_cur cursor for
+    ->      select empid,name,salary;
+    ->      declare continue handler for not found set done=1;
+    ->      open bonus_cur;
+    ->      lbl:loop
+    ->      fetch bonus_cur into v_id,v_name,v_salary;
+    ->      if done then
+    ->      leave lbl;
+    ->      end if;
+    ->     insert into emp_bouns values(v_id,v_name,v_salary*0.10);
+    ->  end loop;
+    ->     close bonus_cur;
+    ->     end//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CALL cal_bouns()//
+ERROR 1054 (42S22): Unknown column 'empid' in 'field list'
+mysql> DROP PROCEDURE IF EXISTS cal_bouns;//
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>  create procedure cal_bouns()
+    ->      begin
+    ->      declare done int default 0;
+    ->      declare v_id int;
+    ->      declare v_name varchar(20);
+    ->      declare v_salary decimal(10,2);
+    ->      declare bonus_cur cursor for
+    ->      select empid,name,salary from empinfo;
+    ->      declare continue handler for not found set done=1;
+    ->      open bonus_cur;
+    ->      lbl:loop
+    ->      fetch bonus_cur into v_id,v_name,v_salary;
+    ->      if done then
+    ->      leave lbl;
+    ->      end if;
+    ->     insert into emp_bouns values(v_id,v_name,v_salary*0.10);
+    ->  end loop;
+    ->     close bonus_cur;
+    ->     end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL cal_bouns()//
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> select * from emp_bouns//
++--------+----------------+---------+
+| emp_id | name           | bouns   |
++--------+----------------+---------+
+|      1 | Rahul Sharma   | 5500.00 |
+|      2 | Priya Mehta    | 4800.05 |
+|      3 | Amit Verma     | 6200.08 |
+|      4 | Sneha Iyer     | 5900.00 |
+|      5 | Karan Malhotra | 4500.00 |
+|      6 | Divya Singh    | 6100.03 |
+|      7 | Rohit Desai    | 4700.00 |
+|      8 | Meera Patil    | 6000.00 |
+|      9 | Siddharth Jain | 4400.00 |
+|     10 | Anjali Nair    | 6300.00 |
+|     11 | Rahul Mehta    | 6500.00 |
++--------+----------------+---------+
+11 rows in set (0.00 sec)
+
+mysql> DROP PROCEDURE IF EXISTS cal_bouns;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>  create procedure cal_bouns()
+    ->      begin
+    ->      declare done int default 0;
+    ->      declare v_id int;
+    ->      declare v_name varchar(20);
+    ->      declare v_salary decimal(10,2);
+    ->      declare bonus_cur cursor for
+    ->      select empid,name,salary from empinfo;
+    ->      declare continue handler for not found set done=1;
+    ->      open bonus_cur;
+    ->      lbl:loop
+    ->      fetch bonus_cur into v_id,v_name,v_salary;
+    ->      if done then
+    ->      leave lbl;
+    ->      end if;
+    ->     insert into emp_bouns values(v_id,v_name,v_salary*0.40);
+    ->  end loop;
+    ->     close bonus_cur;
+    ->     end//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CALL cal_bouns()//
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> select * from emp_bouns//
++--------+----------------+----------+
+| emp_id | name           | bouns    |
++--------+----------------+----------+
+|      1 | Rahul Sharma   |  5500.00 |
+|      2 | Priya Mehta    |  4800.05 |
+|      3 | Amit Verma     |  6200.08 |
+|      4 | Sneha Iyer     |  5900.00 |
+|      5 | Karan Malhotra |  4500.00 |
+|      6 | Divya Singh    |  6100.03 |
+|      7 | Rohit Desai    |  4700.00 |
+|      8 | Meera Patil    |  6000.00 |
+|      9 | Siddharth Jain |  4400.00 |
+|     10 | Anjali Nair    |  6300.00 |
+|     11 | Rahul Mehta    |  6500.00 |
+|      1 | Rahul Sharma   | 22000.00 |
+|      2 | Priya Mehta    | 19200.20 |
+|      3 | Amit Verma     | 24800.30 |
+|      4 | Sneha Iyer     | 23600.00 |
+|      5 | Karan Malhotra | 18000.00 |
+|      6 | Divya Singh    | 24400.10 |
+|      7 | Rohit Desai    | 18800.00 |
+|      8 | Meera Patil    | 24000.00 |
+|      9 | Siddharth Jain | 17600.00 |
+|     10 | Anjali Nair    | 25200.00 |
+|     11 | Rahul Mehta    | 26000.00 |
++--------+----------------+----------+
+22 rows in set (0.00 sec)
+
+mysql> truncate table emp_bouns//
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> select * from emp_bouns//
+Empty set (0.00 sec)
+
+mysql> CALL cal_bouns()//
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select * from emp_bouns//
++--------+----------------+----------+
+| emp_id | name           | bouns    |
++--------+----------------+----------+
+|      1 | Rahul Sharma   | 22000.00 |
+|      2 | Priya Mehta    | 19200.20 |
+|      3 | Amit Verma     | 24800.30 |
+|      4 | Sneha Iyer     | 23600.00 |
+|      5 | Karan Malhotra | 18000.00 |
+|      6 | Divya Singh    | 24400.10 |
+|      7 | Rohit Desai    | 18800.00 |
+|      8 | Meera Patil    | 24000.00 |
+|      9 | Siddharth Jain | 17600.00 |
+|     10 | Anjali Nair    | 25200.00 |
+|     11 | Rahul Mehta    | 26000.00 |
++--------+----------------+----------+
+11 rows in set (0.00 sec)
+
