@@ -35,14 +35,21 @@ public:
 	}
 };
 int book::b_count=0;
+//	void printdata(book temp){
+//		cout<<"Title: "<< temp.title<<endl;
+//		cout<<"Author: "<<temp.author<<endl;
+//		cout<<"Noofpages: "<<temp.noofpages<<endl;
+//	}
 int main(){
 	book b,b1("Harry Potter","J.K.Rowling",200),b2,b3,b4;		//b->default , b1->coustamize
-	book *b5,*b6,*b7;
+	book *b5,*b6,b7(b1);
 	b5=new book("Pirates","Johnny",200);
+//	b7 = new book(b1); // ? Correct
 	b5->describe();
 	delete(b5);
 	b.describe();
 	b1.describe();
+	b7.describe();
 	cout<<"Total book count:"<<book::b_count;
 //	cout<<
 }
