@@ -108,3 +108,20 @@ int main()
  
 }
 
+=====°=========≠==========
+#include<iostream>
+//beaking digits
+using namespace std;
+int main()
+{
+int number;
+cout<<"\nEnter a number:";
+cin>>number;
+while(number>0)
+{
+int digit=number%10;
+number=number/10;
+cout<<"\nnumber:"<<number<<"\tdigit:"<<digit;
+//5 blank space
+}
+}
