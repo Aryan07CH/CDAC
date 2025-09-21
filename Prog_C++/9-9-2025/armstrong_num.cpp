@@ -1,10 +1,9 @@
 #include<iostream>
 #include<cmath>
-//reverse a number digitwise
+
 using namespace std;
 int main()
 {
-	/*
 	int num,digit=0,sum=0;
 	cout<<"\nEnter a number:";
 	cin>>num;
@@ -21,8 +20,8 @@ int main()
 		cout<<endl<<num1<<" Is Armstrong Number ";
 	else
 		cout<<endl<<num1<<" It is not";
-	*/
 	
-	//    Armstrong numbers between 1 and 1000 
+
 	
 }
+
