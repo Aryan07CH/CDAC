@@ -1,0 +1,37 @@
+##  Pointer
+    A pointer does not store any data,but if refers to where the data is stored by its address.
+    Pointer takes only 1 byte. Pointer can only refers to its own datatype.
+    p->1200
+    p->int---1200 to 1204  4bytes
+    p->char--1byte
+    p->1200 to 1201
+
+    Pointer Operator:
+        &: address of operator
+        *: value at address of operator
+
+        eg: x=10
+            int *p=&x;
+            &x or p or &p--->1200
+            x=x+5
+            *p--->15
+            *p=*p+10;
+            x-->25
+    
+    C++ was last language to have pointers. Why?
+    ->This was due to the security issue.A pointer can directly go & access some memory,
+    which was against security policies
+    Sol-> Reference(Python,Java,....)
+        Close pointer that means the address never exposed. The operating system maintains security &
+        control by mapping an alias with an internal address.
+        eg-> int x=10;
+            int &alter_x=x; //&denotes alias
+
+## Double Pointer
+    It is the pointer pointing to another pointer
+    int **var;
+
+    eg->
+
+## Pointer to Array
+    
