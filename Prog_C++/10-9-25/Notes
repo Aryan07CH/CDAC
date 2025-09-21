@@ -1,0 +1,27 @@
+#   ARRAY
+Collection of similar type of data
+Syntax:  datatype var[size];
+
+Whenever we need to store a data elements of a type
+Array index start from zero because zero refers directly to first address. In case 12
+Array is a best example of static allocation
+
+# Array 2D:
+Syntax: datatype var[rows][cols];
+
+By default access is row and cols(row wise access)
+
+# Strings
+
+Collection of characters from C++ character setting.
+'a' character
+"aryan" string
+
+String can store any info that falls within the character set of C++
+
+cin>>var; -> Can only read a word   //tokenizes on basis of space
+
+getline(cin,var);  
+
+By default, the system insert a null symbol'\0' to denote the end od a string
+string n="aryan"
