@@ -1,0 +1,118 @@
+
+## **Assignment: Git Hands-on Practice**
+
+### **Task 1: Configure Git**
+
+1. Set your username and email in Git.
+2. Verify the configuration.
+
+**Expected Output:**
+
+aryan@ARYAN MINGW64 ~/Desktop/CDAC/SDM/Assignment
+$ git congif --global user.name "Aryan07CH"
+git: 'congif' is not a git command. See 'git --help'.
+
+The most similar command is
+        config
+
+
+aryan@ARYAN MINGW64 ~/Desktop/CDAC/SDM/Assignment
+$ git config --global user.email "aryanchogale3@gmail.com"
+
+aryan@ARYAN MINGW64 ~/Desktop/CDAC/SDM/Assignment
+$ git config list
+diff.astextplain.textconv=astextplain
+filter.lfs.clean=git-lfs clean -- %f
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.process=git-lfs filter-process
+filter.lfs.required=true
+http.sslbackend=schannel
+core.autocrlf=true
+core.fscache=true
+core.symlinks=false
+pull.rebase=false
+credential.helper=manager
+credential.https://dev.azure.com.usehttppath=true
+init.defaultbranch=master
+core.editor="C:\Users\aryan\AppData\Local\Programs\Microsoft VS Code\bin\code" --wait
+user.name=Aryan07CH
+user.email=aryanchogale3@gmail.com
+
+
+Screenshot or command output showing configured username and email.
+
+
+### **Task 2: Initialize a Local Repository**
+
+1. Create a new folder named `git-hands-on`.
+2. Initialize it as a Git repository.
+3. Check the repository status.
+
+### **Task 3: Create and Track Files**
+
+1. Create a file named `documentation.txt`.
+2. Add a short project description inside it.
+3. Check file status.
+4. Stage the file.
+5. Commit the changes with an appropriate message.
+
+### **Task 4: Modify and Commit Changes**
+
+1. Edit `documentation.txt` and add one more line.
+2. View the differences between working directory and staging area.
+3. Stage and commit the changes.
+
+### **Task 5: View Commit History**
+
+1. View the complete commit history.
+2. View commit history in one-line format.
+
+### **Task 6: Create and Work with Branches**
+
+1. Create a new branch named `feature-1`.
+2. Switch to the new branch.
+3. Create a new file `feature.txt`.
+4. Commit the changes.
+5. Switch back to the main branch.
+
+### **Task 7: Merge Branches**
+
+1. Merge `feature-1` branch into `main`.
+2. Verify the merge using commit history.
+
+### **Task 8: Connect to a Remote Repository**
+
+1. Create a new repository on GitHub.
+2. Add the remote repository URL to your local repo.
+3. Verify the remote connection.
+
+
+### **Task 9: Push Code to GitHub**
+
+1. Push the `main` branch to GitHub.
+2. Verify files on GitHub.
+
+
+### **Task 10: Clone a Repository**
+
+1. Clone the same GitHub repository into a different folder.
+2. Verify the cloned content.
+
+### **Task 11: Undo Changes**
+
+1. Make a change in `documentation.txt` but do not commit.
+2. Discard the changes.
+3. Verify the file status.
+
+
+### **Task 12: Remove Files**9
+
+1. Delete `feature.txt` using Git.
+2. Commit the deletion.
+
+## **Submission Guidelines**
+
+* Submit screenshots or terminal output for each task
+* Provide GitHub repository link
+* Ensure commit messages are meaningful
+
