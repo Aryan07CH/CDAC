@@ -1,0 +1,24 @@
+$ history
+    1  mkdir index.html
+    2  nano index.html
+    3  git status
+    4  git init
+    5  git status
+    6  git add *
+    7  git status
+    8  git rm --cached *
+    9  git rm --cached * -r
+   10  git commit
+   11  git config list
+   12  git congif --global user.name "Aryan07CH"
+   13  git config --global user.name "Aryan07CH"
+   14  git config --global user.email "aryanchogale3@gmail"
+   15  git config list
+   16  git config --global user.email "aryanchogale3@gmail.com"
+   17  git config list
+   18  git status
+   19  git add *
+   20  git status
+   21  git commit -m "First Commit Version 1.0"
+   22  history
+
